@@ -2,24 +2,12 @@
 <project version="4">
   <component name="ApexVcsIndex">
     <index-move-record>
-      <option name="firstPath" value="/pyblast/__pycache__" />
-      <option name="path" value="/core/__pycache__" />
-    </index-move-record>
-    <index-move-record>
-      <option name="firstPath" value="/pyblast/utils.py" />
-      <option name="path" value="/core/utils.py" />
+      <option name="firstPath" value="/core/blast.py" />
+      <option name="path" value="/pyblast/blast.py" />
     </index-move-record>
     <index-move-record>
       <option name="firstPath" value="/pyblast/BLAST.py" />
       <option name="path" value="/core/BLAST.py" />
-    </index-move-record>
-    <index-move-record>
-      <option name="firstPath" value="/pyblast/seqio.py" />
-      <option name="path" value="/core/seqio.py" />
-    </index-move-record>
-    <index-move-record>
-      <option name="firstPath" value="/pyblast/__init__.py" />
-      <option name="path" value="/core/__init__.py" />
     </index-move-record>
   </component>
 </project>
