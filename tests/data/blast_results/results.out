@@ -1,4 +1,4 @@
-# BLASTN 2.7.1+
+# BLASTN 2.9.0+
 # Query: pMODKan-HO-pACT1-Z4-
 # Database: /Users/justinvrana/Documents/GitHub/pyblast/tests/data/blast_results/db
 # Fields: query acc., subject acc., score, evalue, bit score, alignment length, identical, gap opens, gaps, query length, q. start, q. end, subject length, s. start, s. end, subject strand, query seq, subject seq
