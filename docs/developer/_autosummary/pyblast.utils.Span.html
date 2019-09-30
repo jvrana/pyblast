@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyblast.utils.Span &#8212; pyblastbio 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pyblast.utils" href="pyblast.utils.html" />
+    <link rel="prev" title="pyblast.BioBlastFactory" href="pyblast.BioBlastFactory.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+    
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          pyblast</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">pyblast <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_reference.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pyblast.BioBlastFactory.html" title="Previous Chapter: pyblast.BioBlastFactory"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; pyblast.BioBl...</span>
+    </a>
+  </li>
+  <li>
+    <a href="pyblast.utils.html" title="Next Chapter: pyblast.utils"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">pyblast.utils &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../../_sources/developer/_autosummary/pyblast.utils.Span.rst"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pyblast-utils-span">
+<h1>pyblast.utils.Span<a class="headerlink" href="#pyblast-utils-span" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyblast.utils.Span">
+<em class="property">class </em><code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">Span</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">l</em>, <em class="sig-param">cyclic=False</em>, <em class="sig-param">index=0</em>, <em class="sig-param">allow_wrap=True</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Container</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sized</span></code></p>
+<p>Constructs a new Span. <cite>Span</cite> maps the provided positions onto a context
+Spans have no direction and have an underlying context
+that has a certain length, can be linear or cyclic, and has a starting index.</p>
+<p>The following attributes are accessible:</p>
+<ul class="simple">
+<li><p><cite>a</cite> - the starting (inclusive) position of the span</p></li>
+<li><p><cite>b</cite> - the mapped exclusive position of the span</p></li>
+<li><p><cite>c</cite> - the unmapped exclusive position of the span (used for cyclic spans that wrap context multiple times)</p></li>
+<li><p><cite>cyclic</cite> - whether the underlying context is circular or linear</p></li>
+<li><p><cite>index</cite> - the first index of the context</p></li>
+<li><p><cite>context_length</cite> - the length of the underlying context.</p></li>
+</ul>
+<p><strong>Linear spans</strong>
+For example, a basic linear span can be represented using the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(0, 10, 20)
+assert s.a == 0
+assert s.b == 10
+assert list(s) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  # spans are always exclusive at endpoint.
+</pre></div>
+</div>
+<p><strong>Indexing and Slicing</strong></p>
+<p>New indexes can be provided to spans.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(1, 10, 10, index=1)
+assert s.a == 1
+assert s.b == 10
+</pre></div>
+</div>
+<p>Positions can be mapped to the span:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(5, 8, 10, index=5)
+assert s.a == 5
+assert s.b == 8
+assert s[0] == 5  # the &#39;first&#39; position in the span equivalent to the starting index
+assert s[-1] == 7  # the &#39;last&#39; position in the span is the last inclusive index
+</pre></div>
+</div>
+<p>Positions can be mapped automatically during initialization:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(-1, 5, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available index on the context, &#39;9&#39;
+assert s.a == 9
+assert s.b == 5
+
+s = Span(6, -1, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available exclusive index on the context, &#39;10&#39;
+assert s.a == 6
+assert s.b == 10
+</pre></div>
+</div>
+<p>Inclusive positions can be mapped onto the context using <cite>t</cite>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(-1, 5, 10, cyclic=True)
+assert s.t(11) == 1
+assert s.t(10) == 0
+</pre></div>
+</div>
+<p><strong>Reindexing</strong></p>
+<p>Context starting index can be remapped:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(0, 5, 10)
+s1 = s.reindex(1)
+asset s1.a == 1
+assert s2.b == 6
+</pre></div>
+</div>
+<p><strong>Slicing</strong></p>
+<p>Spans can be sliced similarly to lists:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(4, 8, 10)
+s1 = s[1:]
+assert s1.a == 5
+assert s2.b == 8
+
+s2 = s[:-1]
+assert s2.a == 4
+assert s2.b == 7
+
+s3 = s[2:-1]
+assert s3.a == 5
+assert s3.b == 7
+</pre></div>
+</div>
+<p><strong>Cyclic spans</strong>
+A cyclic span can be represented in the following way:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(18, 2, 20, cyclic=True)
+assert s.a == 18
+assert s.b == 2
+assert list(s) == [18, 19, 0, 1]
+assert len(s) == 4
+</pre></div>
+</div>
+<p><strong>Wrapping cyclic spans</strong>
+Spans the wrap around the context multiple times can be represented as well. The mapped endpoint
+is found with <cite>span.b</cite> and the non-mapped endpoint is found using <cite>span.c</cite>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(9, 21, 10, cyclic=True)
+assert list(s) == [9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+assert len(s) == 12
+assert s.a == 9  # start point
+assert s.b == 1  # mapped endpoint
+assert s.c == 21 # the unmapped endpoint
+</pre></div>
+</div>
+<p>The indices are reduced to their lowest ‘wrapping’ whenever possible. For example, the following
+initializations are equivalent:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(1, 5, 10, cyclic=True)
+s2 = Span(11, 15, 10, cyclic=True)
+s3 = Span(21, 25, 10, cyclic=True)
+assert s1 == s2
+assert s2 == s3
+</pre></div>
+</div>
+<p><strong>Iterating through spans</strong></p>
+<p>Spans can be treated like iterators:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>for i in Span(5, 3, 10, cyclic=True):
+    print(i)
+</pre></div>
+</div>
+<p><strong>Span inversion</strong></p>
+<p>Inversion returns two spans that represent everything <em>except</em> the span:</p>
+<p><strong>Intersections, differences</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(4, 10, 20)
+s2 = Span(8, 12, 20)
+s3 = s1.intersection(s2)
+assert s3.a == 8
+assert s3.b == 10
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(4, 10, 20)
+s2 = Span(8, 12, 20)
+s3, s4 = s1.differences(s2)
+
+assert s3.a, s3.b == 4, 8
+assert s4,a, s4.b == 10, 12
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>int</em>) – start of the span (inclusive)</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – end of the span (exclusive)</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – context length of the region</p></li>
+<li><p><strong>cyclic</strong> (<em>bool</em>) – whether the underlying context is cyclic</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – the starting index of the region</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – if True, positions outside of context bounds are disallowed.</p></li>
+<li><p><strong>allow_wrap</strong> (<em>bool</em>) – if True (default False), spans that wrap around context more than once will be mapped
+as if the span only wrapped around once.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pyblast.utils.Span.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">l</em>, <em class="sig-param">cyclic=False</em>, <em class="sig-param">index=0</em>, <em class="sig-param">allow_wrap=True</em>, <em class="sig-param">strict=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a new Span. <cite>Span</cite> maps the provided positions onto a context
+Spans have no direction and have an underlying context
+that has a certain length, can be linear or cyclic, and has a starting index.</p>
+<p>The following attributes are accessible:</p>
+<ul class="simple">
+<li><p><cite>a</cite> - the starting (inclusive) position of the span</p></li>
+<li><p><cite>b</cite> - the mapped exclusive position of the span</p></li>
+<li><p><cite>c</cite> - the unmapped exclusive position of the span (used for cyclic spans that wrap context multiple times)</p></li>
+<li><p><cite>cyclic</cite> - whether the underlying context is circular or linear</p></li>
+<li><p><cite>index</cite> - the first index of the context</p></li>
+<li><p><cite>context_length</cite> - the length of the underlying context.</p></li>
+</ul>
+<p><strong>Linear spans</strong>
+For example, a basic linear span can be represented using the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(0, 10, 20)
+assert s.a == 0
+assert s.b == 10
+assert list(s) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  # spans are always exclusive at endpoint.
+</pre></div>
+</div>
+<p><strong>Indexing and Slicing</strong></p>
+<p>New indexes can be provided to spans.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(1, 10, 10, index=1)
+assert s.a == 1
+assert s.b == 10
+</pre></div>
+</div>
+<p>Positions can be mapped to the span:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(5, 8, 10, index=5)
+assert s.a == 5
+assert s.b == 8
+assert s[0] == 5  # the &#39;first&#39; position in the span equivalent to the starting index
+assert s[-1] == 7  # the &#39;last&#39; position in the span is the last inclusive index
+</pre></div>
+</div>
+<p>Positions can be mapped automatically during initialization:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(-1, 5, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available index on the context, &#39;9&#39;
+assert s.a == 9
+assert s.b == 5
+
+s = Span(6, -1, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available exclusive index on the context, &#39;10&#39;
+assert s.a == 6
+assert s.b == 10
+</pre></div>
+</div>
+<p>Inclusive positions can be mapped onto the context using <cite>t</cite>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(-1, 5, 10, cyclic=True)
+assert s.t(11) == 1
+assert s.t(10) == 0
+</pre></div>
+</div>
+<p><strong>Reindexing</strong></p>
+<p>Context starting index can be remapped:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(0, 5, 10)
+s1 = s.reindex(1)
+asset s1.a == 1
+assert s2.b == 6
+</pre></div>
+</div>
+<p><strong>Slicing</strong></p>
+<p>Spans can be sliced similarly to lists:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(4, 8, 10)
+s1 = s[1:]
+assert s1.a == 5
+assert s2.b == 8
+
+s2 = s[:-1]
+assert s2.a == 4
+assert s2.b == 7
+
+s3 = s[2:-1]
+assert s3.a == 5
+assert s3.b == 7
+</pre></div>
+</div>
+<p><strong>Cyclic spans</strong>
+A cyclic span can be represented in the following way:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(18, 2, 20, cyclic=True)
+assert s.a == 18
+assert s.b == 2
+assert list(s) == [18, 19, 0, 1]
+assert len(s) == 4
+</pre></div>
+</div>
+<p><strong>Wrapping cyclic spans</strong>
+Spans the wrap around the context multiple times can be represented as well. The mapped endpoint
+is found with <cite>span.b</cite> and the non-mapped endpoint is found using <cite>span.c</cite>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(9, 21, 10, cyclic=True)
+assert list(s) == [9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+assert len(s) == 12
+assert s.a == 9  # start point
+assert s.b == 1  # mapped endpoint
+assert s.c == 21 # the unmapped endpoint
+</pre></div>
+</div>
+<p>The indices are reduced to their lowest ‘wrapping’ whenever possible. For example, the following
+initializations are equivalent:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(1, 5, 10, cyclic=True)
+s2 = Span(11, 15, 10, cyclic=True)
+s3 = Span(21, 25, 10, cyclic=True)
+assert s1 == s2
+assert s2 == s3
+</pre></div>
+</div>
+<p><strong>Iterating through spans</strong></p>
+<p>Spans can be treated like iterators:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>for i in Span(5, 3, 10, cyclic=True):
+    print(i)
+</pre></div>
+</div>
+<p><strong>Span inversion</strong></p>
+<p>Inversion returns two spans that represent everything <em>except</em> the span:</p>
+<p><strong>Intersections, differences</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(4, 10, 20)
+s2 = Span(8, 12, 20)
+s3 = s1.intersection(s2)
+assert s3.a == 8
+assert s3.b == 10
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(4, 10, 20)
+s2 = Span(8, 12, 20)
+s3, s4 = s1.differences(s2)
+
+assert s3.a, s3.b == 4, 8
+assert s4,a, s4.b == 10, 12
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>int</em>) – start of the span (inclusive)</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – end of the span (exclusive)</p></li>
+<li><p><strong>l</strong> (<em>int</em>) – context length of the region</p></li>
+<li><p><strong>cyclic</strong> (<em>bool</em>) – whether the underlying context is cyclic</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – the starting index of the region</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – if True, positions outside of context bounds are disallowed.</p></li>
+<li><p><strong>allow_wrap</strong> (<em>bool</em>) – if True (default False), spans that wrap around context more than once will be mapped
+as if the span only wrapped around once.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.__init__" title="pyblast.utils.Span.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(a, b, l[, cyclic, index, …])</p></td>
+<td><p>Constructs a new Span.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.bounds" title="pyblast.utils.Span.bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bounds</span></code></a>()</p></td>
+<td><p>Return the context bounds (end exclusive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.connecting_span" title="pyblast.utils.Span.connecting_span"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connecting_span</span></code></a>(other)</p></td>
+<td><p>Return the span that connects the two spans.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.consecutive" title="pyblast.utils.Span.consecutive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">consecutive</span></code></a>(other)</p></td>
+<td><p>Returns True if other span is immediately consecutive with this span.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">contains_pos</span></code>(pos)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">contains_span</span></code>(other)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.differences" title="pyblast.utils.Span.differences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">differences</span></code></a>(other)</p></td>
+<td><p>Return a tuple of differences between this span and the other span.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.force_context" title="pyblast.utils.Span.force_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force_context</span></code></a>(other)</p></td>
+<td><p>Raise error if another Span has different context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.intersection" title="pyblast.utils.Span.intersection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">intersection</span></code></a>(other)</p></td>
+<td><p>Return the span inersection between this span and the other span.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.invert" title="pyblast.utils.Span.invert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invert</span></code></a>()</p></td>
+<td><p>Invert the region, returning a tuple of the remaining spans from the context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.new" title="pyblast.utils.Span.new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new</span></code></a>(a, b[, allow_wrap, index, strict])</p></td>
+<td><p>Create a new span using the same context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.overlaps_with" title="pyblast.utils.Span.overlaps_with"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overlaps_with</span></code></a>(other)</p></td>
+<td><p>Returns True if other span has an overlap with this span.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.ranges" title="pyblast.utils.Span.ranges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ranges</span></code></a>()</p></td>
+<td><p>Return ranges of valid positions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.reindex" title="pyblast.utils.Span.reindex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reindex</span></code></a>(i[, strict, allow_wrap])</p></td>
+<td><p>Return a new span with positions reindexed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.same_context" title="pyblast.utils.Span.same_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">same_context</span></code></a>(other)</p></td>
+<td><p>Return if another Span as an equivalent context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.slices" title="pyblast.utils.Span.slices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slices</span></code></a>()</p></td>
+<td><p>Return list of slices</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">spans_origin</span></code>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.sub" title="pyblast.utils.Span.sub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sub</span></code></a>(a, b)</p></td>
+<td><p>Create a sub region starting from a to b.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.t" title="pyblast.utils.Span.t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">t</span></code></a>(p[, throw_error])</p></td>
+<td><p>Translates a position ‘p’ to an index within the context bounds.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.a" title="pyblast.utils.Span.a"><code class="xref py py-obj docutils literal notranslate"><span class="pre">a</span></code></a></p></td>
+<td><p>Return the inclusive mapped startpoint.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.b" title="pyblast.utils.Span.b"><code class="xref py py-obj docutils literal notranslate"><span class="pre">b</span></code></a></p></td>
+<td><p>Return the exclusive mapped endpoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.c" title="pyblast.utils.Span.c"><code class="xref py py-obj docutils literal notranslate"><span class="pre">c</span></code></a></p></td>
+<td><p>Return the exclusive un-mapped endpoint.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.context_length" title="pyblast.utils.Span.context_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context_length</span></code></a></p></td>
+<td><p>Return the length of the context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.Span.cyclic" title="pyblast.utils.Span.cyclic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cyclic</span></code></a></p></td>
+<td><p>Return whether the context is cyclic/circular.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.Span.index" title="pyblast.utils.Span.index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code></a></p></td>
+<td><p>Return the starting index of the context.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyblast.utils.Span.a">
+<em class="property">property </em><code class="sig-name descname">a</code><a class="headerlink" href="#pyblast.utils.Span.a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the inclusive mapped startpoint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.b">
+<em class="property">property </em><code class="sig-name descname">b</code><a class="headerlink" href="#pyblast.utils.Span.b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the exclusive mapped endpoint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.bounds">
+<code class="sig-name descname">bounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the context bounds (end exclusive)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.c">
+<em class="property">property </em><code class="sig-name descname">c</code><a class="headerlink" href="#pyblast.utils.Span.c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the exclusive un-mapped endpoint.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.connecting_span">
+<code class="sig-name descname">connecting_span</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.connecting_span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.connecting_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the span that connects the two spans. Returns None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.consecutive">
+<code class="sig-name descname">consecutive</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.consecutive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.consecutive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if other span is immediately consecutive with this span.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.context_length">
+<em class="property">property </em><code class="sig-name descname">context_length</code><a class="headerlink" href="#pyblast.utils.Span.context_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length of the context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.cyclic">
+<em class="property">property </em><code class="sig-name descname">cyclic</code><a class="headerlink" href="#pyblast.utils.Span.cyclic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the context is cyclic/circular.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.differences">
+<code class="sig-name descname">differences</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.differences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.differences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of differences between this span and the other span.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.force_context">
+<code class="sig-name descname">force_context</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.force_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.force_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise error if another Span has different context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>) – The other span</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>SpanError</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.index">
+<em class="property">property </em><code class="sig-name descname">index</code><a class="headerlink" href="#pyblast.utils.Span.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the starting index of the context.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.intersection">
+<code class="sig-name descname">intersection</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the span inersection between this span and the other span.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.invert">
+<code class="sig-name descname">invert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.invert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert the region, returning a tuple of the remaining spans from the context.
+If cyclic, a tuple (span, None) tuple is returned. If linear, a (span, span) is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>inverted regions</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.new">
+<code class="sig-name descname">new</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">allow_wrap=True</em>, <em class="sig-param">index=None</em>, <em class="sig-param">strict=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.new"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.new" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new span using the same context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.overlaps_with">
+<code class="sig-name descname">overlaps_with</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.overlaps_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.overlaps_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if other span has an overlap with this span.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code>) – The other span</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if the two spans overlap.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.ranges">
+<code class="sig-name descname">ranges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.ranges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.ranges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return ranges of valid positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.reindex">
+<code class="sig-name descname">reindex</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">strict=None</em>, <em class="sig-param">allow_wrap=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.reindex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.reindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new span with positions reindexed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> – new index</p></li>
+<li><p><strong>strict</strong> – initialize with ‘strict’</p></li>
+<li><p><strong>allow_wrap</strong> – allow multiple wrapping.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.same_context">
+<code class="sig-name descname">same_context</code><span class="sig-paren">(</span><em class="sig-param">other</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.same_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.same_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return if another Span as an equivalent context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.slices">
+<code class="sig-name descname">slices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.slices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.slices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of slices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.sub">
+<code class="sig-name descname">sub</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.sub"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a sub region starting from a to b.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – starting pos</p></li>
+<li><p><strong>b</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – ending pos</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Span</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new Span.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.utils.Span.t">
+<code class="sig-name descname">t</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">throw_error=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.t"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translates a position ‘p’ to an index within the context bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017-2019, University of Washington.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

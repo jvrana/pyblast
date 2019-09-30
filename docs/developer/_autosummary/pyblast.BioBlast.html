@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyblast.BioBlast &#8212; pyblastbio 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pyblast.JSONBlast" href="pyblast.JSONBlast.html" />
+    <link rel="prev" title="API Reference" href="../api_reference.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+    
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          pyblast</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">pyblast <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_reference.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="../api_reference.html" title="Previous Chapter: API Reference"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; API Reference</span>
+    </a>
+  </li>
+  <li>
+    <a href="pyblast.JSONBlast.html" title="Next Chapter: pyblast.JSONBlast"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">pyblast.JSONBlast &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../../_sources/developer/_autosummary/pyblast.BioBlast.rst"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pyblast-bioblast">
+<h1>pyblast.BioBlast<a class="headerlink" href="#pyblast-bioblast" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pyblast.BioBlast">
+<em class="property">class </em><code class="sig-prename descclassname">pyblast.</code><code class="sig-name descname">BioBlast</code><span class="sig-paren">(</span><em class="sig-param">subjects</em>, <em class="sig-param">queries</em>, <em class="sig-param">seq_db=None</em>, <em class="sig-param">span_origin=True</em>, <em class="sig-param">force_unique_ids=False</em>, <em class="sig-param">config=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyblast.blast.blast.TmpBlast</span></code></p>
+<p>Initialize a new BioBlast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects</strong> (<em>list</em>) – list of SeqRecords to use as subjects. Subjects get aligned to the queries.</p></li>
+<li><p><strong>queries</strong> (<em>list</em>) – list of SeqRecords to use as queries. Subjects get aligned to the queries.</p></li>
+<li><p><strong>seq_db</strong> (<em>SeqRecordDB</em>) – optional SeqRecordDB to use</p></li>
+<li><p><strong>span_origin</strong> (<em>bool</em>) – if False, will treat all sequences as linear (default: True)</p></li>
+<li><p><strong>force_unique_ids</strong> (<em>bool</em>) – if True, will force any records with the same record_id to be unique.</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – additional blast config</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="pyblast.BioBlast.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">subjects</em>, <em class="sig-param">queries</em>, <em class="sig-param">seq_db=None</em>, <em class="sig-param">span_origin=True</em>, <em class="sig-param">force_unique_ids=False</em>, <em class="sig-param">config=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a new BioBlast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subjects</strong> (<em>list</em>) – list of SeqRecords to use as subjects. Subjects get aligned to the queries.</p></li>
+<li><p><strong>queries</strong> (<em>list</em>) – list of SeqRecords to use as queries. Subjects get aligned to the queries.</p></li>
+<li><p><strong>seq_db</strong> (<em>SeqRecordDB</em>) – optional SeqRecordDB to use</p></li>
+<li><p><strong>span_origin</strong> (<em>bool</em>) – if False, will treat all sequences as linear (default: True)</p></li>
+<li><p><strong>force_unique_ids</strong> (<em>bool</em>) – if True, will force any records with the same record_id to be unique.</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – additional blast config</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.BioBlast.__init__" title="pyblast.BioBlast.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(subjects, queries[, seq_db, …])</p></td>
+<td><p>Initialize a new BioBlast.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.add_records" title="pyblast.BioBlast.add_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_records</span></code></a>(records, seq_db[, span_origin])</p></td>
+<td><p>Adds records to the local sequence database (SeqRecordDb).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.BioBlast.blastn" title="pyblast.BioBlast.blastn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blastn</span></code></a>()</p></td>
+<td><p>Alias of ‘quick_blastn’</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.blastn_short" title="pyblast.BioBlast.blastn_short"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blastn_short</span></code></a>()</p></td>
+<td><p>Alias of ‘quick_blastn_short’</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">closedb</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.create_config" title="pyblast.BioBlast.create_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_config</span></code></a>()</p></td>
+<td><p>Create a configuration dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_perfect</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.makedb" title="pyblast.BioBlast.makedb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makedb</span></code></a>(**kwargs)</p></td>
+<td><p>Creates a blastdb from sequences grabbed from the input directory</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_result_to_span</span></code>(data[, inclusive, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.parse_results" title="pyblast.BioBlast.parse_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_results</span></code></a>([delim, reindex])</p></td>
+<td><p>Parses the blast output to a digestable JSON output of the following format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.BioBlast.parse_to_span" title="pyblast.BioBlast.parse_to_span"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_to_span</span></code></a>(v[, reindex])</p></td>
+<td><p>Convert a JSON blast result to a Span.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.quick_blastn" title="pyblast.BioBlast.quick_blastn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quick_blastn</span></code></a>()</p></td>
+<td><p>Produce database, run blastn protocol, &amp; parse results</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.BioBlast.quick_blastn_short" title="pyblast.BioBlast.quick_blastn_short"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quick_blastn_short</span></code></a>()</p></td>
+<td><p>Produce database, run blastn short protocol, &amp; parse results</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.run_cmd" title="pyblast.BioBlast.run_cmd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_cmd</span></code></a>(cmd, **kwargs)</p></td>
+<td><p>Wrapper for utils.run_cmd</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_paths</span></code>(db_name, db_out_dir, results_out_path)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_config</span></code>(config)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.BioBlast.use_test_data" title="pyblast.BioBlast.use_test_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_test_data</span></code></a>()</p></td>
+<td><p>Create a Blast instance using predefined data located in tests</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.BioBlast.validate_files" title="pyblast.BioBlast.validate_files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_files</span></code></a>()</p></td>
+<td><p>Validate the directories and query files</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_REINDEX</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">REINDEX_KEY</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">blast_config</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">db</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">outfmt</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pyblast.BioBlast._filter_remove_same_results">
+<em class="property">static </em><code class="sig-name descname">_filter_remove_same_results</code><span class="sig-paren">(</span><em class="sig-param">results</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast._filter_remove_same_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast._filter_remove_same_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes alignments that aligned to themselves.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>results</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast._parse__annotate_meta">
+<code class="sig-name descname">_parse__annotate_meta</code><span class="sig-paren">(</span><em class="sig-param">meta</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast._parse__annotate_meta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast._parse__annotate_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate default meta information from the raw JSON result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>meta</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast._parse__annotate_record">
+<code class="sig-name descname">_parse__annotate_record</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast._parse__annotate_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast._parse__annotate_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate record information from the raw JSON result using the sequence database and sequence_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast._parse__correct_endpoints">
+<code class="sig-name descname">_parse__correct_endpoints</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">inclusive=True</em>, <em class="sig-param">input_index=1</em>, <em class="sig-param">output_index=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast._parse__correct_endpoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast._parse__correct_endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correct endpoints of JSON results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The JSON result. E.g. <cite>{“start”: 0, “end”: 100, “origin_sequence_length”: 200}</cite></p></li>
+<li><p><strong>inclusive</strong> – If True, the input JSON result is considered to be inclusive at the endpoint.</p></li>
+<li><p><strong>input_index</strong> – The starting index assumed in the input JSON result.</p></li>
+<li><p><strong>output_index</strong> – The index to reindex the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast._run">
+<code class="sig-name descname">_run</code><span class="sig-paren">(</span><em class="sig-param">cmd</em>, <em class="sig-param">**config_opts</em><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast._run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the blastn using the current configuration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.add_records">
+<em class="property">classmethod </em><code class="sig-name descname">add_records</code><span class="sig-paren">(</span><em class="sig-param">records</em>, <em class="sig-param">seq_db</em>, <em class="sig-param">span_origin=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast.add_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast.add_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds records to the local sequence database (SeqRecordDb). If <cite>self.span_origin=True</cite>,
+then in addition to adding the original SequenceRecord to the database, sequences will
+be pseudocircularized (concatenated with itself) if they are detected to be circular (via the ‘topology’
+annotation’) so that Blast can properly align sequences over the origin. Only sequences that were linear or
+the pseudociruclarized sequences are used in the alignment. After running blast and obtaining results, span
+indices are automatically corrected to account for the original pseudocircularization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>records</strong> (<em>list</em>) – list of SeqRecords annotated with ‘topology’ being ‘linear’ or ‘circular’</p></li>
+<li><p><strong>seq_db</strong> (<em>SeqRecordDB</em>) – optional SeqRecordDB to use</p></li>
+<li><p><strong>span_origin</strong> (<em>bool</em>) – whether to search the sequence as a circular plasmid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of keys to use in the alignment procedure</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.blastn">
+<code class="sig-name descname">blastn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.blastn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias of ‘quick_blastn’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.blastn_short">
+<code class="sig-name descname">blastn_short</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.blastn_short" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias of ‘quick_blastn_short’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.create_config">
+<code class="sig-name descname">create_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.create_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a configuration dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.makedb">
+<code class="sig-name descname">makedb</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.makedb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a blastdb from sequences grabbed from the input directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.parse_results">
+<code class="sig-name descname">parse_results</code><span class="sig-paren">(</span><em class="sig-param">delim='</em>, <em class="sig-param">'</em>, <em class="sig-param">reindex=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast.parse_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast.parse_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the blast output to a digestable JSON output of the following format. Results
+can be found in <cite>self.results</cite> or returned from this function. Starting and ending
+positions are inclusive and starting index is 1.</p>
+<p>..code-block:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[
+    {
+      &quot;query&quot;: {
+        &quot;start&quot;: 1,
+        &quot;end&quot;: 4219,
+        &quot;bases&quot;: &quot;TTTAGTATATAT...&quot;,
+        &quot;strand&quot;: 1,
+        &quot;length&quot;: 18816,
+        &quot;sequence_id&quot;: &quot;pMODKan-HO-pACT1-Z4-&quot;
+      },
+      &quot;subject&quot;: {
+        &quot;start&quot;: 1,
+        &quot;end&quot;: 4219,
+        &quot;bases&quot;: &quot;TCGCGCGTTTCGGTGATGACGG...&quot;,
+        &quot;strand&quot;: 1,
+        &quot;length&quot;: 7883,
+        &quot;sequence_id&quot;: &quot;pMODKan-HO-pACT1-ZEV4&quot;
+      },
+      &quot;meta&quot;: {
+        &quot;query acc.&quot;: &quot;pMODKan-HO-pACT1-Z4-&quot;,
+        &quot;subject acc.&quot;: &quot;pMODKan-HO-pACT1-ZEV4&quot;,
+        &quot;score&quot;: 4219,
+        &quot;evalue&quot;: 0,
+        &quot;bit score&quot;: 7792,
+        &quot;alignment length&quot;: 4219,
+        &quot;identical&quot;: 4219,
+        &quot;gap opens&quot;: 0,
+        &quot;gaps&quot;: 0,
+        &quot;query length&quot;: 18816,
+        &quot;q. start&quot;: 1,
+        &quot;q. end&quot;: 4219,
+        &quot;subject length&quot;: 7883,
+        &quot;s. start&quot;: 1,
+        &quot;s. end&quot;: 4219,
+        &quot;subject strand&quot;: &quot;plus&quot;,
+        &quot;query seq&quot;: &quot;TTTAGTATATAT...&quot;,
+        &quot;subject seq&quot;: &quot;TCGCGCGTTTCGGTGATGACGG...&quot;
+      }
+    }
+]
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delim</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.parse_to_span">
+<em class="property">classmethod </em><code class="sig-name descname">parse_to_span</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">reindex=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/blast/blast.html#BioBlast.parse_to_span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.BioBlast.parse_to_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a JSON blast result to a Span. Optionally reindex</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.quick_blastn">
+<code class="sig-name descname">quick_blastn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.quick_blastn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce database, run blastn protocol, &amp; parse results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.quick_blastn_short">
+<code class="sig-name descname">quick_blastn_short</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.quick_blastn_short" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produce database, run blastn short protocol, &amp; parse results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.run_cmd">
+<em class="property">static </em><code class="sig-name descname">run_cmd</code><span class="sig-paren">(</span><em class="sig-param">cmd</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.run_cmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for utils.run_cmd</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.use_test_data">
+<em class="property">classmethod </em><code class="sig-name descname">use_test_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.use_test_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Blast instance using predefined data located in tests</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyblast.BioBlast.validate_files">
+<code class="sig-name descname">validate_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyblast.BioBlast.validate_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the directories and query files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p>PyBlastException if filepaths are invalid or if query sequence has more than one sequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017-2019, University of Washington.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyblast.utils &#8212; pyblastbio 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="pyblast.utils.Span" href="pyblast.utils.Span.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+    
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          pyblast</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">pyblast <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_reference.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="pyblast.utils.Span.html" title="Previous Chapter: pyblast.utils.Span"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; pyblast.utils.Span</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../../_sources/developer/_autosummary/pyblast.utils.rst"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="module-pyblast.utils">
+<span id="pyblast-utils"></span><h1>pyblast.utils<a class="headerlink" href="#module-pyblast.utils" title="Permalink to this headline">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.clean_records" title="pyblast.utils.clean_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clean_records</span></code></a>(records)</p></td>
+<td><p>Remove features for records that have no location.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.complement" title="pyblast.utils.complement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complement</span></code></a>(seq_str)</p></td>
+<td><p>Return the complement of the nucleotide sequence.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.force_unique_record_ids" title="pyblast.utils.force_unique_record_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force_unique_record_ids</span></code></a>(records[, use_uuid])</p></td>
+<td><p>Force unique ids for all records in the list</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.glob_fasta_to_tmpfile" title="pyblast.utils.glob_fasta_to_tmpfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">glob_fasta_to_tmpfile</span></code></a>(dirpath)</p></td>
+<td><p>Concatenate all fasta files into a temporary fasta file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.is_circular" title="pyblast.utils.is_circular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_circular</span></code></a>(record)</p></td>
+<td><p>Returns whether a “topology” annotation was found in the SeqRecord and whether this topolgy indicates that the sequence is circular.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.load_fasta_glob" title="pyblast.utils.load_fasta_glob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_fasta_glob</span></code></a>(path[, recursive, …])</p></td>
+<td><p>Load SeqRecords from a glob-like path containing fasta files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.load_genbank_glob" title="pyblast.utils.load_genbank_glob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_genbank_glob</span></code></a>(path[, recursive, …])</p></td>
+<td><p>Load SeqRecords from a glob-like path containing genbank files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.load_glob" title="pyblast.utils.load_glob"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_glob</span></code></a>(path, format_str[, recursive, …])</p></td>
+<td><p>Load SeqRecords from a glob-like path.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.make_circular" title="pyblast.utils.make_circular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_circular</span></code></a>(records)</p></td>
+<td><p>Annotates the SeqRecords as linear by adding the ‘topology’ annotation and setting it to ‘linear’</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.make_linear" title="pyblast.utils.make_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_linear</span></code></a>(records)</p></td>
+<td><p>Annotates the SeqRecords as linear by adding the ‘topology’ annotation and setting it to ‘linear’</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.new_feature_location" title="pyblast.utils.new_feature_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_feature_location</span></code></a>(start, end, length, strand)</p></td>
+<td><p>Makes a FeatureLocation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyblast.utils.records_to_tmpfile" title="pyblast.utils.records_to_tmpfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">records_to_tmpfile</span></code></a>(records)</p></td>
+<td><p>Write SeqRecords to a temporary file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyblast.utils.reverse_complement" title="pyblast.utils.reverse_complement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reverse_complement</span></code></a>(seq_str)</p></td>
+<td><p>Return reverse complement of nucleotide sequence</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="pyblast.utils._grouped_by_id">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">_grouped_by_id</code><span class="sig-paren">(</span><em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#_grouped_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils._grouped_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of records grouped by their record_id
+:param records:
+:type records:
+:return:
+:rtype:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.clean_records">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">clean_records</code><span class="sig-paren">(</span><em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#clean_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.clean_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove features for records that have no location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.complement">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">complement</code><span class="sig-paren">(</span><em class="sig-param">seq_str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the complement of the nucleotide sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq_str</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.force_unique_record_ids">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">force_unique_record_ids</code><span class="sig-paren">(</span><em class="sig-param">records</em>, <em class="sig-param">use_uuid=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#force_unique_record_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.force_unique_record_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force unique ids for all records in the list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>records</strong> (<em>list</em>) – list of SeqRecords</p></li>
+<li><p><strong>use_uuid</strong> (<em>bool</em>) – If True, will append a unique identifier to the front of the record id. Else, enumerate the records.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the records</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.glob_fasta_to_tmpfile">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">glob_fasta_to_tmpfile</code><span class="sig-paren">(</span><em class="sig-param">dirpath</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#glob_fasta_to_tmpfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.glob_fasta_to_tmpfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate all fasta files into a temporary fasta file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dirpath</strong> (<em>str</em>) – directory containing fasta files</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the temporary filename</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.is_circular">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">is_circular</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#is_circular"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.is_circular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether a “topology” annotation was found in the SeqRecord and
+whether this topolgy indicates that the sequence is circular.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>record</strong> (<em>SeqRecord</em>) – the SeqRecord</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>whether the SeqRecord is circular</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.load_fasta_glob">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">load_fasta_glob</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">recursive=False</em>, <em class="sig-param">force_unique_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#load_fasta_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.load_fasta_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load SeqRecords from a glob-like path containing fasta files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – glob-like filepath</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em>) – whether to search recusively in the glob path.</p></li>
+<li><p><strong>force_unique_ids</strong> (<em>bool</em>) – If True, force records to have unique ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of SeqRecords</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.load_genbank_glob">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">load_genbank_glob</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">recursive=False</em>, <em class="sig-param">force_unique_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#load_genbank_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.load_genbank_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load SeqRecords from a glob-like path containing genbank files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – glob-like filepath</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em>) – whether to search recusively in the glob path.</p></li>
+<li><p><strong>force_unique_ids</strong> (<em>bool</em>) – If True, force records to have unique ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of SeqRecords</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.load_glob">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">load_glob</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">format_str</em>, <em class="sig-param">recursive=False</em>, <em class="sig-param">force_unique_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#load_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.load_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load SeqRecords from a glob-like path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – glob-like filepath</p></li>
+<li><p><strong>format_str</strong> (<em>basestring</em>) – Fileformat. e.g. ‘genbank’, ‘fasta’</p></li>
+<li><p><strong>recursive</strong> (<em>bool</em>) – whether to search recusively in the glob path.</p></li>
+<li><p><strong>force_unique_ids</strong> (<em>bool</em>) – If True, force records to have unique ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of SeqRecords</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.make_circular">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">make_circular</code><span class="sig-paren">(</span><em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#make_circular"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.make_circular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotates the SeqRecords as linear by adding the ‘topology’ annotation and
+setting it to ‘linear’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>records</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SeqRecord</span></code>]) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the records</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.make_linear">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">make_linear</code><span class="sig-paren">(</span><em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#make_linear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.make_linear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotates the SeqRecords as linear by adding the ‘topology’ annotation and
+setting it to ‘linear’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>records</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SeqRecord</span></code>]) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the records</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.new_feature_location">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">new_feature_location</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">length</em>, <em class="sig-param">strand</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#new_feature_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.new_feature_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes a FeatureLocation. If necessary, makes CompoundLocation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.records_to_tmpfile">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">records_to_tmpfile</code><span class="sig-paren">(</span><em class="sig-param">records</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#records_to_tmpfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.records_to_tmpfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write SeqRecords to a temporary file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>records</strong> (<em>list</em>) – list of SeqRecords</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>temporary file path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyblast.utils.reverse_complement">
+<code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">reverse_complement</code><span class="sig-paren">(</span><em class="sig-param">seq_str</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils.html#reverse_complement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.reverse_complement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return reverse complement of nucleotide sequence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq_str</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017-2019, University of Washington.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

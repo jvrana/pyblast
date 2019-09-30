@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyblast.blast.blast &#8212; pyblastbio 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+    
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          pyblast</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">pyblast <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer/api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer/api_reference.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pyblast.blast.blast</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;
+blast.py
+
+More information: https://www.ncbi.nlm.nih.gov/guide/howto/run-blast-local/
+BLAST User Manual: https://www.ncbi.nlm.nih.gov/books/NBK1762/
+&quot;&quot;&quot;
+
+import json
+import os
+import shutil
+import tempfile
+import typing
+from uuid import uuid4
+
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+from more_itertools import unique_everseen
+
+from pyblast.blast_bin import BlastWrapper
+from pyblast.constants import Constants as C
+from pyblast.exceptions import PyBlastException, PyBlastWarning
+from pyblast.utils import Span
+from pyblast.utils import (
+    glob_fasta_to_tmpfile,
+    records_to_tmpfile,
+    clean_records,
+    force_unique_record_ids,
+)
+from pyblast.utils import run_cmd
+from .blast_parser import BlastResultParser
+from .json_parser import JSONParser
+from .seqdb import SeqRecordDB
+
+
+class BlastBase(object):
+    &quot;&quot;&quot;
+    A Blast initializer for running blast searches against subjects contained in a directory. Sequences
+    are kept on the local machine.
+
+    Note: This is not intended to be the endpoint. You should only use temporary files to run the blast search.
+    &quot;&quot;&quot;
+
+    outfmt = [
+        &quot;7&quot;,
+        &quot;qacc&quot;,
+        &quot;sacc&quot;,
+        &quot;score&quot;,
+        &quot;evalue&quot;,
+        &quot;bitscore&quot;,
+        &quot;length&quot;,
+        &quot;nident&quot;,
+        &quot;gapopen&quot;,
+        &quot;gaps&quot;,
+        &quot;qlen&quot;,
+        &quot;qstart&quot;,
+        &quot;qend&quot;,
+        &quot;slen&quot;,
+        &quot;sstart&quot;,
+        &quot;send&quot;,
+        &quot;sstrand&quot;,
+        &quot;qseq&quot;,
+        &quot;sseq&quot;,
+    ]
+
+    blast_config = {&quot;outfmt&quot;: &#39;&quot;{0}&quot;&#39;.format(&quot; &quot;.join(outfmt))}
+
+    def __init__(
+        self,
+        db_name,
+        subject_path,
+        query_path,
+        db_output_directory,
+        results_out_path,
+        output_formatter=None,
+        config=None,
+    ):
+        &quot;&quot;&quot;
+        A Blast initializer for running blast searches.
+
+        :param db_name: Name for database file structure. This name will be appended to all db
+        files that blast creates.
+        :param subject_path: single fsa file containing the subject sequences
+        :param query_path: Location of the fasta or genbank file containing the query
+        :param db_output_directory: Location to store database related files
+        :param results_out_path: Path to store the results.out file. Path can be absolute or relative.
+        :param config: Additional configurations to run for the blast search (see
+        https://www.ncbi.nlm.nih.gov/books/NBK279682/)
+        &quot;&quot;&quot;
+
+        # name of the database
+        self.db_name = None
+        self.db_output_directory = None
+        self.results_out_path = None
+        self.set_paths(db_name, db_output_directory, results_out_path)
+
+        # add executable to the system path
+        blast_wrapper = BlastWrapper()
+        if not blast_wrapper.is_installed():
+            blast_wrapper.ask_to_install()
+
+        self.query_path = query_path
+        self.subject_path = subject_path
+
+        # setup config
+        if config is None:
+            config = {}
+        self._config = dict(config)
+
+        # build the configuration
+        if output_formatter is None:
+            self.outfmt = BlastBase.outfmt
+        else:
+            self.outfmt = output_formatter
+
+        # list of expected fields in the result
+        self.fields = ()
+
+        # the raw results from running blast from the command line
+        self.raw_results = None
+
+        # the parsed results as a dictionary
+        self.results = None
+
+    def set_paths(self, db_name, db_out_dir, results_out_path):
+        self.db_name = db_name
+        if db_out_dir:
+            self.db_output_directory = os.path.abspath(db_out_dir)
+        else:
+            self.db_output_directory = db_out_dir
+        if results_out_path:
+            self.results_out_path = os.path.abspath(results_out_path)
+        else:
+            self.results_out_path = results_out_path
+
+    @property
+    def db(self):
+        return os.path.join(self.db_output_directory, self.db_name)
+
+    @property
+    def config(self):
+        out_config = {&quot;outfmt&quot;: &#39;&quot;{0}&quot;&#39;.format(&quot; &quot;.join(self.outfmt))}
+        out_config.update(self._config)
+        return out_config
+
+    def update_config(self, config):
+        self._config.update(config)
+
+    def validate_files(self):
+        &quot;&quot;&quot;
+        Validate the directories and query files
+
+        :return: None
+        :rtype: None
+        :raises: PyBlastException if filepaths are invalid or if query sequence has more than one sequence
+        &quot;&quot;&quot;
+
+        def _is_file(myfile):
+            return os.path.isfile(os.path.abspath(myfile))
+
+        def _is_dir(mydir):
+            return os.path.isdir(os.path.abspath(mydir))
+
+        outdir = os.path.dirname(self.results_out_path)
+        errors = []
+        for file_ in [self.query_path, self.subject_path]:
+            if not _is_file(file_):
+                errors.append(&quot;File not found: {}&quot;.format(file_))
+        for dir_ in [outdir, self.db_output_directory]:
+            if not _is_dir(dir_):
+                errors.append(&quot;Directory not found {}&quot;.format(dir_))
+        if len(errors) &gt; 0:
+            raise PyBlastException(&quot;\n&quot;.join(errors))
+
+        # seq = PySequence.open(self.query_path)
+        # if len(seq) == 0:
+        #     raise PyBlastException(&quot;Query path \&quot;{}\&quot; has no sequences&quot;.format(self.query_path))
+        # elif len(seq) &gt; 1:
+        #     raise PyBlastException(&quot;Query path \&quot;{}\&quot; has more than one sequence.&quot;.format(self.query_path))
+
+    def create_config(self):
+        &quot;&quot;&quot;Create a configuration dictionary&quot;&quot;&quot;
+        config_dict = {
+            &quot;db&quot;: self.db,
+            &quot;out&quot;: self.results_out_path,
+            &quot;query&quot;: self.query_path,
+        }
+        config_dict.update(self.config)
+        return config_dict
+
+    def blastn(self):
+        &quot;&quot;&quot;Alias of &#39;quick_blastn&#39;&quot;&quot;&quot;
+        self.quick_blastn()
+
+    def quick_blastn(self):
+        &quot;&quot;&quot;Produce database, run blastn protocol, &amp; parse results &quot;&quot;&quot;
+        self.makedb()
+        self._run_blastn()
+        self.closedb()
+        return self.parse_results()
+
+    def blastn_short(self):
+        &quot;&quot;&quot;Alias of &#39;quick_blastn_short&#39;&quot;&quot;&quot;
+        self.quick_blastn_short()
+
+    def quick_blastn_short(self):
+        &quot;&quot;&quot;Produce database, run blastn short protocol, &amp; parse results &quot;&quot;&quot;
+        self.makedb()
+        self._run_blastn_short()
+        self.closedb()
+        return self.parse_results()
+
+    def _run_blastn(self):
+        return self._run(&quot;blastn&quot;)
+
+    def _run_blastn_short(self):
+        return self._run(&quot;blastn&quot;, task=&quot;blastn-short&quot;)
+
+    def _run(self, cmd, **config_opts):
+        &quot;&quot;&quot;Run the blastn using the current configuration&quot;&quot;&quot;
+        config = self.create_config()
+        config.update(config_opts)
+        self.run_cmd(cmd, **config)
+        with open(self.results_out_path, &quot;rU&quot;) as handle:
+            self.raw_results = handle.read()
+        return self.raw_results
+
+    # Wrapper for the util.run_cmd
+    @staticmethod
+    def run_cmd(cmd, **kwargs):
+        &quot;&quot;&quot;Wrapper for utils.run_cmd&quot;&quot;&quot;
+        run_cmd(cmd, **kwargs)
+
+    @staticmethod
+    def _fasta_details(path):
+        seqs = list(SeqIO.parse(path, format=&quot;fasta&quot;))
+        tot_bps = sum([len(s) for s in seqs])
+        return {&quot;num_sequence&quot;: len(seqs), &quot;total_bps&quot;: tot_bps}
+
+    def makedb(self, verbose=False):
+        &quot;&quot;&quot;Creates a blastdb from sequences grabbed from the input directory&quot;&quot;&quot;
+        self.validate_files()
+
+        if verbose:
+            query_details = self._fasta_details(self.query_path)
+            subject_details = self._fasta_details(self.subject_path)
+
+            print(&quot;Making BLAST database from:&quot;)
+            print(json.dumps(subject_details, indent=2))
+
+            print(&quot;Query:&quot;)
+            print(json.dumps(query_details, indent=2))
+
+        self.run_cmd(
+            &quot;makeblastdb&quot;,
+            dbtype=&quot;nucl&quot;,
+            title=self.db_name,
+            out=self.db,
+            **{&quot;in&quot;: self.subject_path}
+        )
+        return self.db
+
+    def closedb(self):
+        os.remove(self.results_out_path)
+        shutil.rmtree(self.db_output_directory)
+
+    @staticmethod
+    def _filter_unique_results(results):
+        return list(
+            unique_everseen(
+                results,
+                key=lambda x: (
+                    x[&quot;query&quot;][&quot;sequence_id&quot;],
+                    x[&quot;query&quot;][&quot;start&quot;],
+                    x[&quot;query&quot;][&quot;end&quot;],
+                    x[&quot;subject&quot;][&quot;sequence_id&quot;],
+                    x[&quot;subject&quot;][&quot;start&quot;],
+                    x[&quot;subject&quot;][&quot;end&quot;],
+                ),
+            )
+        )
+
+    def _filter_results(self, results):
+        results = self._filter_unique_results(results)
+        return results
+
+    def parse_results(self, delim=&quot;,&quot;):
+        &quot;&quot;&quot;
+        Parses the raw blast result to a JSON
+
+        :param delim: delimiter to parse
+        :type delim: str
+        :return:
+        :rtype:
+        &quot;&quot;&quot;
+        results = BlastResultParser.raw_results_to_json(self.raw_results, delim=delim)
+        results = self._filter_results(results)
+        self.results = results
+        return self.results
+
+    def get_perfect(self):
+        return BlastResultParser.get_perfect(self.results)
+
+    def __str__(self):
+        return &quot;{}&quot;.format(self.create_config())
+
+
+class TmpBlast(BlastBase):
+    &quot;&quot;&quot;
+    A Blast object that stores the database files in a hidden temporary directory. Use
+    &quot;quick_blastn&quot; for returning results as a python object.
+    &quot;&quot;&quot;
+
+    def __init__(self, db_name, subject_path, query_path, config=None):
+        &quot;&quot;&quot;
+        TmpBlast: A Blast object that stores the database files in a hidden temporary directory.
+        :param db_name: Name for database file structure. This name will be appended to all db files that blast creates.
+        :param subject_path: Input directory or file containing a list of subjects to align against the query
+        :param query_path: Location of the fasta or genbank file containing the query
+        :param config: Additional configurations to run for the blast search (see
+        https://www.ncbi.nlm.nih.gov/books/NBK279682/)
+        &quot;&quot;&quot;
+        self.subject_records_path = subject_path
+
+        super(TmpBlast, self).__init__(
+            db_name=db_name,
+            subject_path=None,
+            query_path=query_path,
+            db_output_directory=None,
+            results_out_path=None,
+            config=config,
+        )
+
+        self.fields = self.fields + (
+            &quot;subject_name&quot;,
+            &quot;subject_filename&quot;,
+            &quot;subject_circular&quot;,
+            &quot;query_name&quot;,
+            &quot;query_filename&quot;,
+            &quot;query_circular&quot;,
+        )
+
+    def makedb(self, **kwargs):
+        db_output_directory = tempfile.mkdtemp()
+        _, out = tempfile.mkstemp(dir=db_output_directory)
+
+        if os.path.isdir(self.subject_records_path):
+            self.subject_path = glob_fasta_to_tmpfile(self.subject_records_path)
+        else:
+            self.subject_path = self.subject_records_path
+        self.set_paths(self.db_name, db_output_directory, out)
+        super(TmpBlast, self).makedb(**kwargs)
+
+    @classmethod
+    def use_test_data(cls):
+        &quot;&quot;&quot;Create a Blast instance using predefined data located in tests&quot;&quot;&quot;
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        return cls(
+            &quot;db&quot;,
+            os.path.join(dir_path, &quot;..&quot;, &quot;..&quot;, &quot;tests/data/test_data/db.fsa&quot;),
+            os.path.join(dir_path, &quot;..&quot;, &quot;..&quot;, &quot;tests/data/test_data/query.fsa&quot;),
+        )
+
+
+<div class="viewcode-block" id="BioBlast"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast">[docs]</a>class BioBlast(TmpBlast):
+
+    DEFAULT_REINDEX = 1
+    REINDEX_KEY = &#39;reindex&#39;
+
+<div class="viewcode-block" id="BioBlast.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.__init__">[docs]</a>    def __init__(
+        self,
+        subjects: typing.List[SeqRecord],
+        queries: typing.List[SeqRecord],
+        seq_db=None,
+        span_origin=True,
+        force_unique_ids=False,
+        config=None,
+    ):
+        &quot;&quot;&quot;
+        Initialize a new BioBlast.
+
+        :param subjects: list of SeqRecords to use as subjects. Subjects get aligned to the queries.
+        :type subjects: list
+        :param queries: list of SeqRecords to use as queries. Subjects get aligned to the queries.
+        :type queries: list
+        :param seq_db: optional SeqRecordDB to use
+        :type seq_db: SeqRecordDB
+        :param span_origin: if False, will treat all sequences as linear (default: True)
+        :type span_origin: bool
+        :param force_unique_ids: if True, will force any records with the same record_id to be unique.
+        :type force_unique_ids: bool
+        :param config: additional blast config
+        :type config: dict
+        &quot;&quot;&quot;
+        if force_unique_ids:
+            force_unique_record_ids(subjects)
+            force_unique_record_ids(queries)
+        self._check_records(subjects, queries)
+        self.span_origin = span_origin
+        if seq_db is None:
+            self.seq_db = SeqRecordDB()
+            _, subjects = self.add_records(
+                subjects, seq_db=self.seq_db, span_origin=self.span_origin
+            )
+            _, queries = self.add_records(
+                queries, seq_db=self.seq_db, span_origin=self.span_origin
+            )
+        else:
+            self.seq_db = seq_db
+        db_name = str(uuid4())
+        subject_path = records_to_tmpfile(subjects)
+        query_path = records_to_tmpfile(queries)
+        super().__init__(
+            db_name=db_name,
+            subject_path=subject_path,
+            query_path=query_path,
+            config=config,
+        )
+
+        self.parse_options = {
+            self.REINDEX_KEY: self.DEFAULT_REINDEX
+        }</div>
+
+    def _check_records(self, subjects, queries):
+        self._check_empty_records(queries, subjects)
+        self._check_duplicate_records(queries, subjects)
+
+    @staticmethod
+    def _check_duplicate_records(queries, subjects):
+        # Check SeqRecords have unique record_ids
+        subject_rec_ids = {}
+        for s in subjects:
+            subject_rec_ids.setdefault(s.id, list()).append(s)
+        query_rec_ids = {}
+        for s in queries:
+            query_rec_ids.setdefault(s.id, list()).append(s)
+        duplicate_subjects = {k: v for k, v in subject_rec_ids.items() if len(v) &gt; 1}
+        duplicate_queries = {k: v for k, v in query_rec_ids.items() if len(v) &gt; 1}
+        suggestion = (
+            &quot;This may be due to clipping of the record_id that occurs when saving or loading&quot;
+            &quot; certain file formats. Use `{}` or if using `pyblast.utils.load_glob` set the&quot;
+            &quot;`force_unique_ids=True`.&quot;.format(force_unique_record_ids.__name__)
+        )
+        if duplicate_subjects:
+            raise PyBlastException(
+                &quot;One or more subjects have the same record_id:\n{}.\n{}&quot;.format(
+                    list(duplicate_subjects.keys()), suggestion
+                )
+            )
+        if duplicate_queries:
+            raise PyBlastException(
+                &quot;One or more queries have the smae record_id:\n{}\n{}&quot;.format(
+                    list(duplicate_queries.keys()), suggestion
+                )
+            )
+
+    @staticmethod
+    def _check_empty_records(queries, subjects):
+        # Check SeqRecords exist
+        if not subjects:
+            raise ValueError(&quot;Subjects is empty.&quot;)
+        if not queries:
+            raise ValueError(&quot;Queries is empty.&quot;)
+
+<div class="viewcode-block" id="BioBlast._filter_remove_same_results"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._filter_remove_same_results">[docs]</a>    @staticmethod
+    def _filter_remove_same_results(results):
+        &quot;&quot;&quot;
+        Removes alignments that aligned to themselves.
+
+        :param results:
+        :type results:
+        :return:
+        :rtype:
+        &quot;&quot;&quot;
+        new_results = []
+        for r in results:
+            query = r[&quot;query&quot;]
+            subj = r[&quot;subject&quot;]
+            k1 = query[&quot;origin_key&quot;]
+            k2 = subj[&quot;origin_key&quot;]
+            qends = (query[&quot;start&quot;], query[&quot;end&quot;])
+            sends = (subj[&quot;start&quot;], subj[&quot;end&quot;])
+            if k1 == k2 and qends == sends:
+                continue
+            else:
+                new_results.append(r)
+        return new_results</div>
+
+    @staticmethod
+    def _filter_unique_results(results):
+        return list(
+            unique_everseen(
+                results,
+                key=lambda x: (
+                    x[&quot;query&quot;][&quot;sequence_id&quot;],
+                    x[&quot;query&quot;][&quot;start&quot;],
+                    x[&quot;query&quot;][&quot;end&quot;],
+                    x[&quot;query&quot;][&quot;raw_end&quot;],
+                    x[&quot;subject&quot;][&quot;sequence_id&quot;],
+                    x[&quot;subject&quot;][&quot;start&quot;],
+                    x[&quot;subject&quot;][&quot;end&quot;],
+                    x[&quot;subject&quot;][&quot;raw_end&quot;]
+                ),
+            )
+        )
+
+    def _filter_results(self, results):
+        results = self._filter_unique_results(results)
+        results = self._filter_remove_same_results(results)
+        return results
+
+<div class="viewcode-block" id="BioBlast.add_records"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.add_records">[docs]</a>    @classmethod
+    def add_records(
+        cls, records: typing.List[SeqRecord], seq_db: SeqRecordDB, span_origin=True
+    ) -&gt; typing.Tuple[typing.List[str], typing.List[SeqRecord]]:
+        &quot;&quot;&quot;
+        Adds records to the local sequence database (SeqRecordDb). If `self.span_origin=True`,
+        then in addition to adding the original SequenceRecord to the database, sequences will
+        be pseudocircularized (concatenated with itself) if they are detected to be circular (via the &#39;topology&#39;
+        annotation&#39;) so that Blast can properly align sequences over the origin. Only sequences that were linear or
+        the pseudociruclarized sequences are used in the alignment. After running blast and obtaining results, span
+        indices are automatically corrected to account for the original pseudocircularization.
+
+        :param records: list of SeqRecords annotated with &#39;topology&#39; being &#39;linear&#39; or &#39;circular&#39;
+        :type records: list
+        :param seq_db: optional SeqRecordDB to use
+        :type seq_db: SeqRecordDB
+        :param span_origin: whether to search the sequence as a circular plasmid
+        :type span_origin: bool
+        :return: list of keys to use in the alignment procedure
+        :rtype: list
+        &quot;&quot;&quot;
+        clean_records(records)
+
+        def copy_record(r):
+            c = r[:]
+            c.annotations = dict(r.annotations)
+            return c
+
+        def pseudocircularize(r):
+            r2 = r + r
+            r2.name = C.PSEUDOCIRCULAR + &quot;__&quot; + r.name
+            r2.id = str(uuid4())
+            return r2
+
+        circular = [r for r in records if seq_db.is_circular(r)]
+        linear = [r for r in records if not seq_db.is_circular(r)]
+        if span_origin:
+            keys = seq_db.add_many_with_transformations(
+                circular, pseudocircularize, C.PSEUDOCIRCULAR
+            )
+        else:
+            keys = seq_db.add_many_with_transformations(
+                circular, copy_record, C.PSEUDOCIRCULAR
+            )
+        keys += seq_db.add_many_with_transformations(linear, copy_record, C.COPY_RECORD)
+        transformed_records = seq_db.get_many(keys)
+        return keys, transformed_records</div>
+
+    def parse_result_to_span(self, data, inclusive=True, input_index=1, output_index=None):
+
+        if output_index is None:
+            output_index = input_index
+
+        s, e, l = data[&#39;start&#39;], data[&#39;raw_end&#39;], data[&#39;origin_sequence_length&#39;]
+        if data[&#39;strand&#39;] == -1:
+            s, e = e, s
+        c = data[&#39;circular&#39;]
+        if inclusive:
+            e += 1
+        span = Span(s, e, l, cyclic=c, allow_wrap=True, index=input_index)
+        if input_index != output_index:
+            span = span.reindex(output_index)
+        return span
+
+<div class="viewcode-block" id="BioBlast.parse_to_span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.parse_to_span">[docs]</a>    @classmethod
+    def parse_to_span(cls, v, reindex=0):
+        &quot;&quot;&quot;Convert a JSON blast result to a Span. Optionally reindex&quot;&quot;&quot;
+        def make_span(data):
+            cls.parse_result_to_span(data=data,
+                                     inclusive=v[&#39;meta&#39;][&#39;inclusive&#39;],
+                                     input_index=v[&#39;meta&#39;][&#39;start_index&#39;],
+                                     output_index=reindex)
+        return {
+            &#39;query&#39;: make_span(v[&#39;query&#39;]),
+            &#39;subject&#39;: make_span(v[&#39;subject&#39;])
+        }</div>
+
+<div class="viewcode-block" id="BioBlast._parse__annotate_meta"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__annotate_meta">[docs]</a>    def _parse__annotate_meta(self, meta):
+        &quot;&quot;&quot;
+        Annotate default meta information from the raw JSON result.
+
+        :param meta:
+        :return:
+        &quot;&quot;&quot;
+        meta[&#39;start_index&#39;] = 1
+        meta[&#39;inclusive&#39;] = True
+        meta[&quot;span_origin&quot;] = self.span_origin</div>
+
+<div class="viewcode-block" id="BioBlast._parse__annotate_record"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__annotate_record">[docs]</a>    def _parse__annotate_record(self, data):
+        &quot;&quot;&quot;
+        Annotate record information from the raw JSON result using the sequence database and sequence_id.
+
+        :param data:
+        :return:
+        &quot;&quot;&quot;
+        origin_key = self.seq_db.get_origin_key(data[&quot;sequence_id&quot;])
+        record = self.seq_db.get(origin_key)
+        is_circular = self.seq_db.is_circular(record)
+        data[&quot;circular&quot;] = is_circular
+        data[&quot;name&quot;] = record.name
+        data[&quot;origin_key&quot;] = origin_key
+        data[&quot;origin_record_id&quot;] = record.id
+        data[&quot;origin_sequence_length&quot;] = len(record.seq)</div>
+
+<div class="viewcode-block" id="BioBlast._parse__correct_endpoints"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__correct_endpoints">[docs]</a>    def _parse__correct_endpoints(self, data, inclusive=True, input_index=1, output_index=None):
+        &quot;&quot;&quot;
+        Correct endpoints of JSON results.
+
+        :param data: The JSON result. E.g. `{&quot;start&quot;: 0, &quot;end&quot;: 100, &quot;origin_sequence_length&quot;: 200}`
+        :param inclusive: If True, the input JSON result is considered to be inclusive at the endpoint.
+        :param input_index: The starting index assumed in the input JSON result.
+        :param output_index: The index to reindex the result.
+        :return:
+        &quot;&quot;&quot;
+
+        if output_index is None:
+            output_index = input_index
+        data[&#39;raw_end&#39;] = data[&#39;end&#39;]
+        s, e = data[&quot;start&quot;], data[&quot;end&quot;]
+        reverse = data[&quot;strand&quot;] != 1
+        if reverse:
+            s, e = e, s
+        if e - s &lt; 0:
+            raise ValueError(&quot;End cannot be less than start&quot;)
+        elif data[&#39;circular&#39;]:
+            span = self.parse_result_to_span(data=data,
+                                             inclusive=inclusive,
+                                             input_index=input_index,
+                                             output_index=output_index)
+            data[&quot;start&quot;] = span.a
+            data[&quot;end&quot;] = span.b - 1
+            data[&quot;raw_end&quot;] = span.c - 1
+            if reverse:
+                data[&quot;start&quot;], data[&quot;end&quot;], data[&#39;raw_end&#39;] = data[&quot;end&quot;], data[&quot;start&quot;], data[&#39;start&#39;]</div>
+
+    def _parse_bioblast_results(self, v, output_index):
+        self._parse__annotate_meta(v[&#39;meta&#39;])
+        for x in [&quot;query&quot;, &quot;subject&quot;]:
+            self._parse__annotate_record(v[x])
+            self._parse__correct_endpoints(v[x],
+                                           inclusive=v[&#39;meta&#39;][&#39;inclusive&#39;],
+                                           input_index=v[&#39;meta&#39;][&#39;start_index&#39;],
+                                           output_index=output_index)
+        v[&#39;meta&#39;][&#39;start_index&#39;] = output_index
+        return v
+
+<div class="viewcode-block" id="BioBlast.parse_results"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.parse_results">[docs]</a>    def parse_results(self, delim=&quot;,&quot;, reindex=None):
+        &quot;&quot;&quot;
+        Parses the blast output to a digestable JSON output of the following format. Results
+        can be found in `self.results` or returned from this function. Starting and ending
+        positions are inclusive and starting index is 1.
+
+        ..code-block::
+
+            [
+                {
+                  &quot;query&quot;: {
+                    &quot;start&quot;: 1,
+                    &quot;end&quot;: 4219,
+                    &quot;bases&quot;: &quot;TTTAGTATATAT...&quot;,
+                    &quot;strand&quot;: 1,
+                    &quot;length&quot;: 18816,
+                    &quot;sequence_id&quot;: &quot;pMODKan-HO-pACT1-Z4-&quot;
+                  },
+                  &quot;subject&quot;: {
+                    &quot;start&quot;: 1,
+                    &quot;end&quot;: 4219,
+                    &quot;bases&quot;: &quot;TCGCGCGTTTCGGTGATGACGG...&quot;,
+                    &quot;strand&quot;: 1,
+                    &quot;length&quot;: 7883,
+                    &quot;sequence_id&quot;: &quot;pMODKan-HO-pACT1-ZEV4&quot;
+                  },
+                  &quot;meta&quot;: {
+                    &quot;query acc.&quot;: &quot;pMODKan-HO-pACT1-Z4-&quot;,
+                    &quot;subject acc.&quot;: &quot;pMODKan-HO-pACT1-ZEV4&quot;,
+                    &quot;score&quot;: 4219,
+                    &quot;evalue&quot;: 0,
+                    &quot;bit score&quot;: 7792,
+                    &quot;alignment length&quot;: 4219,
+                    &quot;identical&quot;: 4219,
+                    &quot;gap opens&quot;: 0,
+                    &quot;gaps&quot;: 0,
+                    &quot;query length&quot;: 18816,
+                    &quot;q. start&quot;: 1,
+                    &quot;q. end&quot;: 4219,
+                    &quot;subject length&quot;: 7883,
+                    &quot;s. start&quot;: 1,
+                    &quot;s. end&quot;: 4219,
+                    &quot;subject strand&quot;: &quot;plus&quot;,
+                    &quot;query seq&quot;: &quot;TTTAGTATATAT...&quot;,
+                    &quot;subject seq&quot;: &quot;TCGCGCGTTTCGGTGATGACGG...&quot;
+                  }
+                }
+            ]
+
+        :param delim:
+        :type delim:
+        :return:
+        :rtype:
+        &quot;&quot;&quot;
+        if reindex is None:
+            reindex = self.parse_options.get(self.REINDEX_KEY, self.DEFAULT_REINDEX)
+        parsed_results = BlastResultParser.raw_results_to_json(
+            self.raw_results, delim=delim
+        )
+
+        # # TODO: resolve with sequence dictionary, resolving pseudocircularized constructs
+        for v in parsed_results:
+            if v:
+                self._parse_bioblast_results(v, output_index=reindex)
+        parsed_results = self._filter_results(parsed_results)
+        self.results = parsed_results
+        return self.results</div></div>
+
+
+<div class="viewcode-block" id="JSONBlast"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.JSONBlast.html#pyblast.JSONBlast">[docs]</a>class JSONBlast(BioBlast):
+    &quot;&quot;&quot;Object that runs blast starting from JSON inputs and outputs&quot;&quot;&quot;
+
+<div class="viewcode-block" id="JSONBlast.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.JSONBlast.html#pyblast.JSONBlast.__init__">[docs]</a>    def __init__(
+        self, subject_json, query_json, span_origin=True, seq_db=None, config=None
+    ):
+        &quot;&quot;&quot;
+        Initialize JSONBlast
+
+        :param subject_json: subject sequences as serialized json. Schema may be found in :class:`pyblast.schema.SequenceSchema`
+        :type subject_json: list of dict, mapping, or Object
+        :param query_json: query sequence as serialized json
+        :type query_json: dict, mapping, or Object
+        :param span_origin: default False. If True, circular sequences will be pseudocircularized for alignment over the origin
+        :type span_origin: boolean
+        :param seq_db: optional SeqRecordDB to use
+        :type seq_db: SeqRecordDB
+        :param config: optional arguments
+        :type config: dict
+        &quot;&quot;&quot;
+        srecords = JSONParser.JSON_to_SeqRecords(subject_json)
+        qrecords = JSONParser.JSON_to_SeqRecords(query_json)
+        self.subject_json = subject_json
+        self.query_json = query_json
+        super().__init__(
+            srecords, qrecords, seq_db=seq_db, span_origin=span_origin, config=config
+        )</div>
+
+<div class="viewcode-block" id="JSONBlast.use_test_data"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.JSONBlast.html#pyblast.JSONBlast.use_test_data">[docs]</a>    @classmethod
+    def use_test_data(cls):
+        &quot;&quot;&quot;Create a Blast instance using predefined data located in tests&quot;&quot;&quot;
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(
+            os.path.join(dir_path, &quot;..&quot;, &quot;..&quot;, &quot;tests/data/test_data/templates.json&quot;),
+            &quot;r&quot;,
+        ) as f:
+            subject = json.load(f)
+        with open(
+            os.path.join(dir_path, &quot;..&quot;, &quot;..&quot;, &quot;tests/data/test_data/query.json&quot;), &quot;r&quot;
+        ) as f:
+            query = json.load(f)
+        return cls(subject_json=subject, query_json=query)</div></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017-2019, University of Washington.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

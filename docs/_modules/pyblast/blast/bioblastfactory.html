@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyblast.blast.bioblastfactory &#8212; pyblastbio 0.4.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+    
+
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          pyblast</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">pyblast <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer/api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../developer/api_reference.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pyblast.blast.bioblastfactory</h1><div class="highlight"><pre>
+<span></span>&quot;&quot;&quot;bioblastfactory&quot;&quot;&quot;
+
+
+from pyblast.blast import BioBlast
+from pyblast.blast.seqdb import SeqRecordDB
+from pyblast.utils import clean_records
+from typing import List, Tuple
+from Bio.SeqRecord import SeqRecord
+from pyblast.log import logger
+
+
+<div class="viewcode-block" id="BioBlastFactory"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlastFactory.html#pyblast.BioBlastFactory">[docs]</a>class BioBlastFactory(object):
+    &quot;&quot;&quot;
+    Instance factory for :class:`BioBlast` instance that share the same :class:`SeqRecordDB`.
+
+    Usage:
+
+    ::
+
+        factory = BioBlastFactory()
+        factory[&quot;plasmid_templates&quot;] = records1
+        factory[&quot;primers&quot;] = records2
+        factory[&quot;queries&quot;] = records3
+
+        blast1 = factory(&quot;plasmid_templates&quot;, &quot;queries&quot;)
+        blast2 = factory(&quot;primers&quot;, &quot;queries&quot;)
+    &quot;&quot;&quot;
+
+<div class="viewcode-block" id="BioBlastFactory.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlastFactory.html#pyblast.BioBlastFactory.__init__">[docs]</a>    def __init__(self, seq_db=None, span_origin=True, config=None):
+        &quot;&quot;&quot;
+        Initialize a new BioBlastFactory.
+
+        :param seq_db: the optional SeqRecordDB. If not provided, a new one will be created.
+        :type seq_db: SeqRecordDB
+        &quot;&quot;&quot;
+        if seq_db is None:
+            self.db = SeqRecordDB()
+        else:
+            self.db = seq_db
+        self.span_origin = span_origin
+        self.record_groups = {}
+        self.logger = logger(self)
+        self.config = config</div>
+
+    def __setitem__(self, record_group_name: str, records: List[SeqRecord]):
+        &quot;&quot;&quot;
+        See add_records.
+        &quot;&quot;&quot;
+        self.add_records(records, record_group_name)
+
+    def __getitem__(self, record_group_name):
+        return self.record_groups[record_group_name]
+
+<div class="viewcode-block" id="BioBlastFactory.add_records"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlastFactory.html#pyblast.BioBlastFactory.add_records">[docs]</a>    def add_records(
+        self, records: List[SeqRecord], record_group_name: str
+    ) -&gt; Tuple[List[str], List[SeqRecord]]:
+        &quot;&quot;&quot;
+        Add records to the SeqRecordDB by keyword.
+
+        :param records:
+        :type records:
+        :param record_group_name:
+        :type record_group_name:
+        :return:
+        :rtype:
+        &quot;&quot;&quot;
+        self.logger.info(
+            &quot;Adding {} records to &#39;{}&#39;&quot;.format(len(records), record_group_name)
+        )
+        clean_records(records)
+        keys, records = BioBlast.add_records(
+            records, self.db, span_origin=self.span_origin
+        )
+        if record_group_name:
+            self.record_groups.setdefault(record_group_name, list())
+            self.record_groups[record_group_name] += records
+        return keys, records</div>
+
+    def __call__(self, subject_key, query_key, config=None):
+        &quot;&quot;&quot;
+        Create a new BioBlast instance with the factory&#39;s SeqRecordDB.
+        
+        :param subject_key: the subject key
+        :type subject_key: str
+        :param query_key: the query key
+        :type query_key: str
+        :param config: BioBlast config
+        :type config: dict
+        :return:
+        :rtype:
+        &quot;&quot;&quot;
+        self.logger.info(&quot;new Blast({}, {})&quot;.format(subject_key, query_key))
+        if isinstance(subject_key, str):
+            subjects = self.record_groups[subject_key]
+        else:
+            subjects = []
+            for key in subject_key:
+                if issubclass(type(key), SeqRecord):
+                    subjects += key
+                else:
+                    subjects += self.record_groups[key]
+        if isinstance(query_key, str):
+            queries = self.record_groups[query_key]
+        else:
+            queries = []
+            for key in query_key:
+                if issubclass(type(key), SeqRecord):
+                    queries += key
+                else:
+                    queries += self.record_groups[key]
+        if config is None:
+            config = {}
+        if self.config:
+            config.update(self.config)
+        return BioBlast(
+            subjects=subjects,
+            queries=queries,
+            seq_db=self.db,
+            span_origin=self.span_origin,
+            config=config,
+        )</div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2017-2019, University of Washington.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
