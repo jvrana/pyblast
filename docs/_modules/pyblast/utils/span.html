@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyblast.utils.span &#8212; pyblastbio 0.4.0 documentation</title>
+    <title>pyblast.utils.span &#8212; pyblastbio 0.4.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           pyblast</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -100,16 +100,14 @@ from collections.abc import Container, Iterable, Sized
 from itertools import chain
 from typing import List, Tuple, Union
 
+
 class SpanError(Exception):
     pass
 
 
 <div class="viewcode-block" id="Span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span">[docs]</a>class Span(Container, Iterable, Sized):
-    __slots__ = [&quot;_a&quot;, &quot;_b&quot;, &quot;_c&quot;, &quot;_context_length&quot;, &quot;_cyclic&quot;, &quot;_index&quot;, &quot;_strict&quot;]
-
-<div class="viewcode-block" id="Span.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.__init__">[docs]</a>    def __init__(self, a: int, b: int, l: int, cyclic=False, index=0, allow_wrap=True, strict=False):
-        &quot;&quot;&quot;
-        Constructs a new Span. `Span` maps the provided positions onto a context
+    &quot;&quot;&quot;
+    `Span` maps the provided positions onto a context
         Spans have no direction and have an underlying context
         that has a certain length, can be linear or cyclic, and has a starting index.
 
@@ -156,11 +154,13 @@ class SpanError(Exception):
 
         .. code-block::
 
-            s = Span(-1, 5, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available index on the context, &#39;9&#39;
+            s = Span(-1, 5, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available index on the context,
+            &#39;9&#39;
             assert s.a == 9
             assert s.b == 5
 
-            s = Span(6, -1, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available exclusive index on the context, &#39;10&#39;
+            s = Span(6, -1, 10, cyclic=True, index=0)  # index &#39;-1&#39; is mapped onto last available exclusive index on the
+             context, &#39;10&#39;
             assert s.a == 6
             assert s.b == 10
 
@@ -283,6 +283,33 @@ class SpanError(Exception):
 
             assert s3.a, s3.b == 4, 8
             assert s4,a, s4.b == 10, 12
+    &quot;&quot;&quot;
+
+    __slots__ = [
+        &quot;_a&quot;,
+        &quot;_b&quot;,
+        &quot;_c&quot;,
+        &quot;_context_length&quot;,
+        &quot;_cyclic&quot;,
+        &quot;_index&quot;,
+        &quot;_strict&quot;,
+        &quot;_abs_wrap&quot;,
+        &quot;_ignore_wrap&quot;,
+    ]
+
+<div class="viewcode-block" id="Span.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.__init__">[docs]</a>    def __init__(
+        self,
+        a: int,
+        b: int,
+        l: int,
+        cyclic=False,
+        index=0,
+        ignore_wrap=False,
+        strict=False,
+        abs_wrap=False,
+    ):
+        &quot;&quot;&quot;
+        Constructs a new Span.
 
         :param a: start of the span (inclusive)
         :type a: int
@@ -296,19 +323,25 @@ class SpanError(Exception):
         :type index: int
         :param strict: if True, positions outside of context bounds are disallowed.
         :type strict: bool
-        :param allow_wrap: if True (default False), spans that wrap around context more than once will be mapped
-                            as if the span only wrapped around once.
-        :type allow_wrap: bool
+        :param ignore_wrap: if True (default False), initialization indicies that wrap around multiple times will
+                            simply be mapped directly to the context (no wrapping used).
+        :type ignore_wrap: bool
+        :param abs_wrap: if True, the abs difference between start and end wrappings are used. Starting wraps that
+                            are greater than ending wraps are valid. If False and the starting wrap is greater than
+                            the ending wrap, an IndexError is thrown.
         &quot;&quot;&quot;
 
         self._context_length = l
         self._index = index
         self._cyclic = cyclic
         self._strict = strict
+        self._abs_wrap = abs_wrap
+        self._ignore_wrap = ignore_wrap
 
         # special empty edge case
         if cyclic and a == b:
-            return self._set_as_empty(a)
+            self._set_as_empty(a)
+            return
 
         # check bounds
         if self._strict or not cyclic:
@@ -322,10 +355,14 @@ class SpanError(Exception):
                     &quot;End {} must be in [{}, {}]&quot;.format(b, index, index + l)
                 )
 
-        start_wrap = int((a - index) / l)
-        end_wrap = int((b - index - 1) / (l))
+        if self._ignore_wrap:
+            start_wrap = 0
+            end_wrap = 0
+        else:
+            start_wrap = int((a - index) / l)
+            end_wrap = int((b - index - 1) / (l))
 
-        if start_wrap &gt; end_wrap:
+        if self._abs_wrap is False and start_wrap &gt; end_wrap:
             self._a = a
             self._b = b
             self._c = b
@@ -366,9 +403,12 @@ class SpanError(Exception):
             )
 
         # allow wrap mean this will keep track of how many time the span wraps around the context
-        if allow_wrap and end_wrap - start_wrap:
-            _c = self._b + (end_wrap - start_wrap) * l
-            self._c = self._b + (end_wrap - start_wrap) * l
+        if not ignore_wrap and end_wrap - start_wrap:
+            if self._abs_wrap:
+                _c = self._b + abs(end_wrap - start_wrap) * l
+            else:
+                _c = self._b + (end_wrap - start_wrap) * l
+            self._c = _c
         else:
             self._c = self._b</div>
 
@@ -421,6 +461,7 @@ class SpanError(Exception):
 
         :param p:
         :type p:
+        :param throw_error:
         :return:
         :rtype:
         &quot;&quot;&quot;
@@ -468,18 +509,28 @@ class SpanError(Exception):
         &quot;&quot;&quot;
         return [slice(*r) for r in self.ranges()]</div>
 
-<div class="viewcode-block" id="Span.reindex"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.reindex">[docs]</a>    def reindex(self, i, strict=None, allow_wrap=True):
+<div class="viewcode-block" id="Span.reindex"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.reindex">[docs]</a>    def reindex(self, i, strict=None, ignore_wrap=None):
         &quot;&quot;&quot;
         Return a new span with positions reindexed.
 
         :param i: new index
         :param strict: initialize with &#39;strict&#39;
-        :param allow_wrap: allow multiple wrapping.
+        :param ignore_wrap: whether to ignore wrapping indices
         :return:
         &quot;&quot;&quot;
-        return self.new(None, None, allow_wrap=allow_wrap, index=i, strict=strict)</div>
+        if ignore_wrap is None:
+            ignore_wrap = self._ignore_wrap
+        return self.new(None, None, ignore_wrap=ignore_wrap, index=i, strict=strict)</div>
 
-<div class="viewcode-block" id="Span.new"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.new">[docs]</a>    def new(self, a: int, b: int, allow_wrap=True, index=None, strict=None) -&gt; Span:
+<div class="viewcode-block" id="Span.new"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.new">[docs]</a>    def new(
+        self,
+        a: Union[int, None],
+        b: Union[int, None],
+        ignore_wrap=None,
+        index=None,
+        strict=None,
+        abs_wrap=None,
+    ) -&gt; Span:
         &quot;&quot;&quot;Create a new span using the same context.&quot;&quot;&quot;
         if a is None:
             a = self._a
@@ -488,6 +539,12 @@ class SpanError(Exception):
 
         if strict is None:
             strict = self._strict
+
+        if abs_wrap is None:
+            abs_wrap = self._abs_wrap
+
+        if ignore_wrap is None:
+            ignore_wrap = self._ignore_wrap
 
         if index is not None:
             d = index - self._index
@@ -501,8 +558,9 @@ class SpanError(Exception):
             self._context_length,
             self._cyclic,
             index=index,
-            allow_wrap=allow_wrap,
+            ignore_wrap=ignore_wrap,
             strict=strict,
+            abs_wrap=abs_wrap,
         )</div>
 
 <div class="viewcode-block" id="Span.sub"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.sub">[docs]</a>    def sub(self, a: int, b: int) -&gt; Span:
@@ -557,7 +615,8 @@ class SpanError(Exception):
 <div class="viewcode-block" id="Span.same_context"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.same_context">[docs]</a>    def same_context(self, other: Span) -&gt; bool:
         &quot;&quot;&quot;Return if another Span as an equivalent context.&quot;&quot;&quot;
         return (
-            other.context_length == self._context_length and self._cyclic == other.cyclic
+            other.context_length == self._context_length
+            and self._cyclic == other.cyclic
         )</div>
 
 <div class="viewcode-block" id="Span.force_context"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.force_context">[docs]</a>    def force_context(self, other: Span) -&gt; None:
@@ -626,7 +685,7 @@ class SpanError(Exception):
         except IndexError:
             return False</div>
 
-<div class="viewcode-block" id="Span.connecting_span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.connecting_span">[docs]</a>    def connecting_span(self, other: Span) -&gt; Span:
+<div class="viewcode-block" id="Span.connecting_span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span.connecting_span">[docs]</a>    def connecting_span(self, other: Span) -&gt; Union[Span, None]:
         &quot;&quot;&quot;
         Return the span that connects the two spans. Returns None
 
@@ -702,7 +761,7 @@ class SpanError(Exception):
         return not (self.__eq__(other))
 
     @classmethod
-    def _pos_in_ranges(cls, pos: int, ranges: List[Tuple(int, int)]):
+    def _pos_in_ranges(cls, pos: int, ranges: List[Tuple[int, int]]):
         for r in ranges:
             if r[0] &lt;= pos &lt; r[1]:
                 return True
@@ -731,7 +790,7 @@ class SpanError(Exception):
             return True
         return self._b &lt; self._a and self._cyclic
 
-    def __contains__(self, other: Span):
+    def __contains__(self, other: Union[Span, int]):
         if isinstance(other, int):
             return self.contains_pos(other)
         elif issubclass(type(other), Span):
@@ -811,11 +870,12 @@ class SpanError(Exception):
             raise ValueError(&quot;indexing does not support {}&quot;.format(type(val)))
 
     def __repr__(self):
-        return &quot;&lt;Span {a} {b} ({c}) cyclic={cyclic} index={index}, nwraps={n}&gt;&quot;.format(
+        return &quot;&lt;Span {a} {b} ({c}) len={l} cyclic={cyclic} index={index}, nwraps={n}&gt;&quot;.format(
             self.__class__.__name__,
             a=self._a,
             b=self._b,
             c=self._c,
+            l=self._context_length,
             cyclic=self._cyclic,
             index=self._index,
             n=self._nwraps,

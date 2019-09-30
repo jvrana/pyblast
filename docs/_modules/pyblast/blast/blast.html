@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyblast.blast.blast &#8212; pyblastbio 0.4.0 documentation</title>
+    <title>pyblast.blast.blast &#8212; pyblastbio 0.4.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           pyblast</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.4.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -462,7 +462,7 @@ class TmpBlast(BlastBase):
 <div class="viewcode-block" id="BioBlast"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast">[docs]</a>class BioBlast(TmpBlast):
 
     DEFAULT_REINDEX = 1
-    REINDEX_KEY = &#39;reindex&#39;
+    REINDEX_KEY = &quot;reindex&quot;
 
 <div class="viewcode-block" id="BioBlast.__init__"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.__init__">[docs]</a>    def __init__(
         self,
@@ -514,9 +514,7 @@ class TmpBlast(BlastBase):
             config=config,
         )
 
-        self.parse_options = {
-            self.REINDEX_KEY: self.DEFAULT_REINDEX
-        }</div>
+        self.parse_options = {self.REINDEX_KEY: self.DEFAULT_REINDEX}</div>
 
     def _check_records(self, subjects, queries):
         self._check_empty_records(queries, subjects)
@@ -596,7 +594,7 @@ class TmpBlast(BlastBase):
                     x[&quot;subject&quot;][&quot;sequence_id&quot;],
                     x[&quot;subject&quot;][&quot;start&quot;],
                     x[&quot;subject&quot;][&quot;end&quot;],
-                    x[&quot;subject&quot;][&quot;raw_end&quot;]
+                    x[&quot;subject&quot;][&quot;raw_end&quot;],
                 ),
             )
         )
@@ -654,18 +652,20 @@ class TmpBlast(BlastBase):
         transformed_records = seq_db.get_many(keys)
         return keys, transformed_records</div>
 
-    def parse_result_to_span(self, data, inclusive=True, input_index=1, output_index=None):
+    def parse_result_to_span(
+        self, data, inclusive=True, input_index=1, output_index=None
+    ):
 
         if output_index is None:
             output_index = input_index
 
-        s, e, l = data[&#39;start&#39;], data[&#39;raw_end&#39;], data[&#39;origin_sequence_length&#39;]
-        if data[&#39;strand&#39;] == -1:
+        s, e, l = data[&quot;start&quot;], data[&quot;raw_end&quot;], data[&quot;origin_sequence_length&quot;]
+        if data[&quot;strand&quot;] == -1:
             s, e = e, s
-        c = data[&#39;circular&#39;]
+        c = data[&quot;circular&quot;]
         if inclusive:
             e += 1
-        span = Span(s, e, l, cyclic=c, allow_wrap=True, index=input_index)
+        span = Span(s, e, l, cyclic=c, ignore_wrap=False, index=input_index)
         if input_index != output_index:
             span = span.reindex(output_index)
         return span
@@ -673,15 +673,16 @@ class TmpBlast(BlastBase):
 <div class="viewcode-block" id="BioBlast.parse_to_span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.parse_to_span">[docs]</a>    @classmethod
     def parse_to_span(cls, v, reindex=0):
         &quot;&quot;&quot;Convert a JSON blast result to a Span. Optionally reindex&quot;&quot;&quot;
+
         def make_span(data):
-            cls.parse_result_to_span(data=data,
-                                     inclusive=v[&#39;meta&#39;][&#39;inclusive&#39;],
-                                     input_index=v[&#39;meta&#39;][&#39;start_index&#39;],
-                                     output_index=reindex)
-        return {
-            &#39;query&#39;: make_span(v[&#39;query&#39;]),
-            &#39;subject&#39;: make_span(v[&#39;subject&#39;])
-        }</div>
+            cls.parse_result_to_span(
+                data=data,
+                inclusive=v[&quot;meta&quot;][&quot;inclusive&quot;],
+                input_index=v[&quot;meta&quot;][&quot;start_index&quot;],
+                output_index=reindex,
+            )
+
+        return {&quot;query&quot;: make_span(v[&quot;query&quot;]), &quot;subject&quot;: make_span(v[&quot;subject&quot;])}</div>
 
 <div class="viewcode-block" id="BioBlast._parse__annotate_meta"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__annotate_meta">[docs]</a>    def _parse__annotate_meta(self, meta):
         &quot;&quot;&quot;
@@ -690,8 +691,8 @@ class TmpBlast(BlastBase):
         :param meta:
         :return:
         &quot;&quot;&quot;
-        meta[&#39;start_index&#39;] = 1
-        meta[&#39;inclusive&#39;] = True
+        meta[&quot;start_index&quot;] = 1
+        meta[&quot;inclusive&quot;] = True
         meta[&quot;span_origin&quot;] = self.span_origin</div>
 
 <div class="viewcode-block" id="BioBlast._parse__annotate_record"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__annotate_record">[docs]</a>    def _parse__annotate_record(self, data):
@@ -710,7 +711,9 @@ class TmpBlast(BlastBase):
         data[&quot;origin_record_id&quot;] = record.id
         data[&quot;origin_sequence_length&quot;] = len(record.seq)</div>
 
-<div class="viewcode-block" id="BioBlast._parse__correct_endpoints"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__correct_endpoints">[docs]</a>    def _parse__correct_endpoints(self, data, inclusive=True, input_index=1, output_index=None):
+<div class="viewcode-block" id="BioBlast._parse__correct_endpoints"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast._parse__correct_endpoints">[docs]</a>    def _parse__correct_endpoints(
+        self, data, inclusive=True, input_index=1, output_index=None
+    ):
         &quot;&quot;&quot;
         Correct endpoints of JSON results.
 
@@ -723,33 +726,41 @@ class TmpBlast(BlastBase):
 
         if output_index is None:
             output_index = input_index
-        data[&#39;raw_end&#39;] = data[&#39;end&#39;]
+        data[&quot;raw_end&quot;] = data[&quot;end&quot;]
         s, e = data[&quot;start&quot;], data[&quot;end&quot;]
         reverse = data[&quot;strand&quot;] != 1
         if reverse:
             s, e = e, s
         if e - s &lt; 0:
             raise ValueError(&quot;End cannot be less than start&quot;)
-        elif data[&#39;circular&#39;]:
-            span = self.parse_result_to_span(data=data,
-                                             inclusive=inclusive,
-                                             input_index=input_index,
-                                             output_index=output_index)
+        elif data[&quot;circular&quot;]:
+            span = self.parse_result_to_span(
+                data=data,
+                inclusive=inclusive,
+                input_index=input_index,
+                output_index=output_index,
+            )
             data[&quot;start&quot;] = span.a
             data[&quot;end&quot;] = span.b - 1
             data[&quot;raw_end&quot;] = span.c - 1
             if reverse:
-                data[&quot;start&quot;], data[&quot;end&quot;], data[&#39;raw_end&#39;] = data[&quot;end&quot;], data[&quot;start&quot;], data[&#39;start&#39;]</div>
+                data[&quot;start&quot;], data[&quot;end&quot;], data[&quot;raw_end&quot;] = (
+                    data[&quot;end&quot;],
+                    data[&quot;start&quot;],
+                    data[&quot;start&quot;],
+                )</div>
 
     def _parse_bioblast_results(self, v, output_index):
-        self._parse__annotate_meta(v[&#39;meta&#39;])
+        self._parse__annotate_meta(v[&quot;meta&quot;])
         for x in [&quot;query&quot;, &quot;subject&quot;]:
             self._parse__annotate_record(v[x])
-            self._parse__correct_endpoints(v[x],
-                                           inclusive=v[&#39;meta&#39;][&#39;inclusive&#39;],
-                                           input_index=v[&#39;meta&#39;][&#39;start_index&#39;],
-                                           output_index=output_index)
-        v[&#39;meta&#39;][&#39;start_index&#39;] = output_index
+            self._parse__correct_endpoints(
+                v[x],
+                inclusive=v[&quot;meta&quot;][&quot;inclusive&quot;],
+                input_index=v[&quot;meta&quot;][&quot;start_index&quot;],
+                output_index=output_index,
+            )
+        v[&quot;meta&quot;][&quot;start_index&quot;] = output_index
         return v
 
 <div class="viewcode-block" id="BioBlast.parse_results"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.BioBlast.html#pyblast.BioBlast.parse_results">[docs]</a>    def parse_results(self, delim=&quot;,&quot;, reindex=None):
