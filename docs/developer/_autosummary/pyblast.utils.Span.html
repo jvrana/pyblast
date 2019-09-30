@@ -228,6 +228,21 @@ assert s2 == s3
 </div>
 <p><strong>Span inversion</strong></p>
 <p>Inversion returns two spans that represent everything <em>except</em> the span:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s = Span(4, 8, 10)
+s1, s2 = s.invert()  # also s[::-1]
+assert s1.a == 0
+assert s1.b == 4
+assert s2.a == 8
+assert s2.b == 10
+
+# inverted cyclic span returns one valid span and None
+s = Span(4, 8, 10, cyclic=True)
+s1, s2 = s.invert()
+assert s1.a == 8
+assert s1.b == 4
+assert s2 is None
+</pre></div>
+</div>
 <p><strong>Intersections, differences</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>s1 = Span(4, 10, 20)
 s2 = Span(8, 12, 20)
@@ -246,7 +261,60 @@ assert s4,a, s4.b == 10, 12
 </div>
 </dd>
 </dl>
-<p>Constructs a new Span.</p>
+<p>Constructs a new Span. There are several options to customize the initialization procedure.</p>
+<p><strong>strict=True</strong></p>
+<p>When strict, any index outside the valid bounds of the context raises an IndexError.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Span(1, 10, 10, cyclic=True, strict=True) # no raise
+Span(1, 11, 10, cyclic=True, strict=True) # raises IndexError
+Span(0, 11, 10, index=1, cyclic=True, strict=True) # raises IndexError
+</pre></div>
+</div>
+<p><strong>ignore_wrap=True</strong></p>
+<p>When wrapping is ignored, indices are simply mapped to the context with no consideration
+of the number of times the absolute position would wrap around the context.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following are equivalent with ignore_wrap == True
+Span(1, 10, 10, cyclic=True, ignore_wrap=True)
+Span(1+10, 10, 10, cyclic=True, ignore_wrap=True)
+Span(1, 10-100, 10, cyclic=True, ignore_wrap=True)
+Span(1+20, 10-100, 10, cyclic=True, ignore_wrap=True)
+</pre></div>
+</div>
+<p><strong>abs_wrap=True</strong></p>
+<p>When absolute wrapping is used, the absolute difference between starting and ending index wrappings
+is calculated, the starting index is to the context while the ending index is adjusted such
+that the length will reflect the abs difference between starting and ending index wrappings. This
+is best shown with the following example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following initializations result in equivalent spans
+
+# starts at 1, wraps around one full time, ends at 5.
+# Length is 15 - 1
+s1 = Span(1, 15, 10, cyclic=True, abs_wrap=True)
+assert len(s1) == 14
+
+# starts at 11, wraps around one full time, ends at 15.
+# Then positions are mapped back to context at 1 and 5.
+# Length is still 25 - 11 == 14
+s2 = Span(11, 25, 10, cyclic=True, abs_wrap=True)
+assert len(s2) == 14
+
+# starts at 11, wraps around one full time, ends at 15.
+# Then positions are mapped back to context at 1 and 5.
+# Length is now 11 + 5 = 14
+s3 = Span(11, 5, 10, cyclic=True, abs_wrap=True)
+assert len(s3) == 14
+
+# the lengths change with the abs diff in number of times wrapped
+_s = Span(21, 5, 10, cyclic=True, abs_wrap=True)
+assert len(_s) == 24
+
+_s = Span(21, 15, 10, cyclic=True, abs_wrap=True)
+assert len(_s) == 14
+
+# all
+assert s1 == s2
+assert s2 == s3
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -267,7 +335,60 @@ the ending wrap, an IndexError is thrown.</p></li>
 <dl class="method">
 <dt id="pyblast.utils.Span.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">l</em>, <em class="sig-param">cyclic=False</em>, <em class="sig-param">index=0</em>, <em class="sig-param">ignore_wrap=False</em>, <em class="sig-param">strict=False</em>, <em class="sig-param">abs_wrap=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a new Span.</p>
+<dd><p>Constructs a new Span. There are several options to customize the initialization procedure.</p>
+<p><strong>strict=True</strong></p>
+<p>When strict, any index outside the valid bounds of the context raises an IndexError.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Span(1, 10, 10, cyclic=True, strict=True) # no raise
+Span(1, 11, 10, cyclic=True, strict=True) # raises IndexError
+Span(0, 11, 10, index=1, cyclic=True, strict=True) # raises IndexError
+</pre></div>
+</div>
+<p><strong>ignore_wrap=True</strong></p>
+<p>When wrapping is ignored, indices are simply mapped to the context with no consideration
+of the number of times the absolute position would wrap around the context.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following are equivalent with ignore_wrap == True
+Span(1, 10, 10, cyclic=True, ignore_wrap=True)
+Span(1+10, 10, 10, cyclic=True, ignore_wrap=True)
+Span(1, 10-100, 10, cyclic=True, ignore_wrap=True)
+Span(1+20, 10-100, 10, cyclic=True, ignore_wrap=True)
+</pre></div>
+</div>
+<p><strong>abs_wrap=True</strong></p>
+<p>When absolute wrapping is used, the absolute difference between starting and ending index wrappings
+is calculated, the starting index is to the context while the ending index is adjusted such
+that the length will reflect the abs difference between starting and ending index wrappings. This
+is best shown with the following example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following initializations result in equivalent spans
+
+# starts at 1, wraps around one full time, ends at 5.
+# Length is 15 - 1
+s1 = Span(1, 15, 10, cyclic=True, abs_wrap=True)
+assert len(s1) == 14
+
+# starts at 11, wraps around one full time, ends at 15.
+# Then positions are mapped back to context at 1 and 5.
+# Length is still 25 - 11 == 14
+s2 = Span(11, 25, 10, cyclic=True, abs_wrap=True)
+assert len(s2) == 14
+
+# starts at 11, wraps around one full time, ends at 15.
+# Then positions are mapped back to context at 1 and 5.
+# Length is now 11 + 5 = 14
+s3 = Span(11, 5, 10, cyclic=True, abs_wrap=True)
+assert len(s3) == 14
+
+# the lengths change with the abs diff in number of times wrapped
+_s = Span(21, 5, 10, cyclic=True, abs_wrap=True)
+assert len(_s) == 24
+
+_s = Span(21, 15, 10, cyclic=True, abs_wrap=True)
+assert len(_s) == 14
+
+# all
+assert s1 == s2
+assert s2 == s3
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
