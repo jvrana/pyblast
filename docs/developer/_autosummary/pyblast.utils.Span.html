@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyblast.utils.Span &#8212; pyblastbio 0.4.1 documentation</title>
+    <title>pyblast.utils.Span &#8212; pyblastbio 0.5 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -41,7 +41,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           pyblast</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -114,8 +114,8 @@
 <dt id="pyblast.utils.Span">
 <em class="property">class </em><code class="sig-prename descclassname">pyblast.utils.</code><code class="sig-name descname">Span</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">l</em>, <em class="sig-param">cyclic=False</em>, <em class="sig-param">index=0</em>, <em class="sig-param">ignore_wrap=False</em>, <em class="sig-param">strict=False</em>, <em class="sig-param">abs_wrap=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyblast/utils/span.html#Span"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyblast.utils.Span" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Container</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Sized</span></code></p>
-<dl>
-<dt><cite>Span</cite> maps the provided positions onto a context</dt><dd><p>Spans have no direction and have an underlying context
+<p><cite>Span</cite> maps the provided positions onto a context</p>
+<p>Spans have no direction and have an underlying context
 that has a certain length, can be linear or cyclic, and has a starting index.</p>
 <p>The following attributes are accessible:</p>
 <ul class="simple">
@@ -259,8 +259,6 @@ assert s3.a, s3.b == 4, 8
 assert s4,a, s4.b == 10, 12
 </pre></div>
 </div>
-</dd>
-</dl>
 <p>Constructs a new Span. There are several options to customize the initialization procedure.</p>
 <p><strong>strict=True</strong></p>
 <p>When strict, any index outside the valid bounds of the context raises an IndexError.</p>
@@ -282,7 +280,8 @@ Span(1+20, 10-100, 10, cyclic=True, ignore_wrap=True)
 <p><strong>abs_wrap=True</strong></p>
 <p>When absolute wrapping is used, the absolute difference between starting and ending index wrappings
 is calculated, the starting index is to the context while the ending index is adjusted such
-that the length will reflect the abs difference between starting and ending index wrappings. This
+that the length will reflect the abs difference between starting and ending index wrappings.
+This can be unintuitive 
 is best shown with the following example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following initializations result in equivalent spans
 
@@ -356,7 +355,8 @@ Span(1+20, 10-100, 10, cyclic=True, ignore_wrap=True)
 <p><strong>abs_wrap=True</strong></p>
 <p>When absolute wrapping is used, the absolute difference between starting and ending index wrappings
 is calculated, the starting index is to the context while the ending index is adjusted such
-that the length will reflect the abs difference between starting and ending index wrappings. This
+that the length will reflect the abs difference between starting and ending index wrappings.
+This can be unintuitive 
 is best shown with the following example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># all of the following initializations result in equivalent spans
 

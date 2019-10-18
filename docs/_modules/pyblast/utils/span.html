@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyblast.utils.span &#8212; pyblastbio 0.4.1 documentation</title>
+    <title>pyblast.utils.span &#8212; pyblastbio 0.5 documentation</title>
     <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           pyblast</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.4.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -107,7 +107,8 @@ class SpanError(Exception):
 
 <div class="viewcode-block" id="Span"><a class="viewcode-back" href="../../../developer/_autosummary/pyblast.utils.Span.html#pyblast.utils.Span">[docs]</a>class Span(Container, Iterable, Sized):
     &quot;&quot;&quot;
-    `Span` maps the provided positions onto a context
+        `Span` maps the provided positions onto a context
+
         Spans have no direction and have an underlying context
         that has a certain length, can be linear or cyclic, and has a starting index.
 
@@ -251,7 +252,7 @@ class SpanError(Exception):
         Inversion returns two spans that represent everything *except* the span:
 
         .. code-block::
-        
+
             s = Span(4, 8, 10)
             s1, s2 = s.invert()  # also s[::-1]
             assert s1.a == 0
@@ -339,7 +340,8 @@ class SpanError(Exception):
 
         When absolute wrapping is used, the absolute difference between starting and ending index wrappings
         is calculated, the starting index is to the context while the ending index is adjusted such
-        that the length will reflect the abs difference between starting and ending index wrappings. This
+        that the length will reflect the abs difference between starting and ending index wrappings.
+        This can be unintuitive 
         is best shown with the following example:
 
         .. code-block::
@@ -641,14 +643,13 @@ class SpanError(Exception):
                 &quot;Start {} cannot exceed end {} for linear spans&quot;.format(a, b)
             )
 
-        if self._nwraps &gt; 0:
-            valid_ranges = [(self._a, self._c)]
-        else:
-            valid_ranges = [list(x) for x in self.ranges()]
+        valid_ranges = [list(x) for x in self.ranges()]
+        valid_ranges[0][0] = max(a, self._a)
+        valid_ranges[-1][1] = min(b + 1, self._b + 1)
 
-            valid_ranges[0][0] = max(a, self._a)
-            valid_ranges[-1][1] = min(b + 1, self._b + 1)
-        assert len(valid_ranges) &lt;= 2
+        if self._nwraps &gt; 0:
+            valid_ranges += [(self._a, self._c + 1)]
+        # assert len(valid_ranges) &lt;= 2
 
         def in_range(pos, ranges):
             for i, r in enumerate(ranges):
@@ -818,7 +819,12 @@ class SpanError(Exception):
             return self[:, self._a], self[self._b, :]</div>
 
     def __eq__(self, other: Span) -&gt; bool:
-        return self.same_context(other) and self._a == other._a and self._b == other._b and self._c == other._c
+        return (
+            self.same_context(other)
+            and self._a == other._a
+            and self._b == other._b
+            and self._c == other._c
+        )
 
     def __ne__(self, other: Span) -&gt; bool:
         return not (self.__eq__(other))
@@ -933,8 +939,8 @@ class SpanError(Exception):
             raise ValueError(&quot;indexing does not support {}&quot;.format(type(val)))
 
     def __repr__(self):
-        return &quot;&lt;Span {a} {b} ({c}) len={l} cyclic={cyclic} index={index}, nwraps={n}&gt;&quot;.format(
-            self.__class__.__name__,
+        return &quot;&lt;{cls} {a} {b} ({c}) len={l} cyclic={cyclic} index={index}, nwraps={n}&gt;&quot;.format(
+            cls=self.__class__.__name__,
             a=self._a,
             b=self._b,
             c=self._c,
