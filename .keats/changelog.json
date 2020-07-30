@@ -1,4 +1,37 @@
 {
+  "0.8": {
+    "description": "update installation",
+    "date": "2020-07-29T22:15:16.104027",
+    "changes": [
+      "Cleaned BLAST installation code"
+    ]
+  },
+  "0.7": {
+    "description": "update package dependencies",
+    "date": "2020-07-29T19:38:30.381048",
+    "changes": [
+      "update package dependencies"
+    ]
+  },
+  "0.6.3": {
+    "description": "bug fixes",
+    "date": "2020-01-24T15:12:25.207653",
+    "changes": [
+      "fixes bug that would throw error during parsing of raw result when there were no blast hits"
+    ]
+  },
+  "0.6.2": {
+    "description": "Bug fix",
+    "date": "2020-01-16T08:30:16.542563",
+    "changes": [
+      "Fixes parsing error with new blast 2.10+"
+    ]
+  },
+  "0.6.1": {
+    "description": "hotfix: remove debugging messages",
+    "date": "2019-12-04T08:40:18.976127",
+    "changes": []
+  },
   "0.6": {
     "description": "API changes and bug fixes",
     "date": "2019-12-03T12:47:12.342741",

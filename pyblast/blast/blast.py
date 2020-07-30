@@ -6,8 +6,12 @@ BLAST User Manual: https://www.ncbi.nlm.nih.gov/books/NBK1762/
 import json
 import os
 import shutil
-import tempfile
 import typing
+from os.path import dirname
+from os.path import isdir
+from os.path import isfile
+from os.path import join
+from typing import Optional
 from uuid import uuid4
 
 from Bio import SeqIO
@@ -17,7 +21,10 @@ from more_itertools import unique_everseen
 from .blast_parser import BlastResultParser
 from .json_parser import JSONParser
 from .seqdb import SeqRecordDB
-from pyblast.blast_bin import BlastWrapper
+from pyblast.cli import ask_to_install
+from pyblast.cli import find_local_installations
+from pyblast.cli import is_installed
+from pyblast.cli import is_locally_installed
 from pyblast.constants import Constants as C
 from pyblast.exceptions import PyBlastException
 from pyblast.utils import clean_records
@@ -34,12 +41,10 @@ class BlastRunningContext:
         self.blast = blastinst
 
     def __enter__(self):
-        print("ENTERING")
         self.blast.makedb()
         self.blast._is_runnable = True
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print("EXITING")
         self.blast.closedb()
         self.blast._is_runnable = False
 
@@ -84,7 +89,9 @@ class BlastBase:
         db_output_directory,
         results_out_path,
         output_formatter=None,
-        config=None,
+        config: Optional[str] = None,
+        run_path: str = None,
+        use_local_run_path: bool = True,
     ):
         """A Blast initializer for running blast searches.
 
@@ -97,8 +104,17 @@ class BlastBase:
         :param results_out_path: Path to store the results.out file. Path can be
         absolute or relative.
         :param config: Additional configurations to run for the blast search (see
+        :param run_path: Op
         https://www.ncbi.nlm.nih.gov/books/NBK279682/)
         """
+        self._run_path = run_path
+        if self._run_path:
+            if not isdir(self._run_path):
+                raise NotADirectoryError(
+                    "Run path '{}' is not a directory".format(self._run_path)
+                )
+        elif use_local_run_path:
+            self._add_local_path()
 
         # name of the database
         self._is_runnable = False
@@ -108,9 +124,8 @@ class BlastBase:
         self.set_paths(db_name, db_output_directory, results_out_path)
 
         # add executable to the system path
-        blast_wrapper = BlastWrapper()
-        if not blast_wrapper.is_installed():
-            blast_wrapper.ask_to_install()
+        if not self.is_installed():
+            ask_to_install()
 
         self.query_path = query_path
         self.subject_path = subject_path
@@ -134,6 +149,14 @@ class BlastBase:
 
         # the parsed results as a dictionary
         self.results = None
+
+    def _add_local_path(self):
+        local_installations = find_local_installations()
+        if local_installations:
+            self._run_path = local_installations[0]
+
+    def is_installed(self):
+        return is_installed() or is_locally_installed()
 
     def set_paths(self, db_name, db_out_dir, results_out_path):
         self.db_name = db_name
@@ -204,18 +227,23 @@ class BlastBase:
     def blastn(self, parse=True):
         """Alias of 'quick_blastn'."""
         with self.running_context():
-            self._run("blastn")
+            self._run_with_config("blastn")
         if parse:
             return self.parse_results()
 
     def blastn_short(self, parse=True):
         """Alias of 'quick_blastn_short'."""
         with self.running_context():
-            self._run("blastn", task="blastn-short")
+            self._run_with_config("blastn", task="blastn-short")
         if parse:
             return self.parse_results()
 
-    def _run(self, cmd, **config_opts):
+    def _run(self, cmd, **kwargs):
+        if self._run_path:
+            cmd = join(self._run_path, cmd)
+        run_cmd(cmd, **kwargs)
+
+    def _run_with_config(self, cmd, **config_opts):
         """Run the blastn using the current configuration."""
         if not self._is_runnable:
             raise PyBlastException(
@@ -225,7 +253,7 @@ class BlastBase:
             )
         config = self.create_config()
         config.update(config_opts)
-        run_cmd(cmd, **config)
+        self._run(cmd, **config)
         with open(self.results_out_path, "rU") as handle:
             self.raw_results = handle.read()
         return self.raw_results
@@ -251,7 +279,7 @@ class BlastBase:
             print("Query:")
             print(json.dumps(query_details, indent=2))
 
-        run_cmd(
+        self._run(
             "makeblastdb",
             dbtype="nucl",
             title=self.db_name,
@@ -360,7 +388,6 @@ class TmpBlast(BlastBase):
         os.close(fd)
 
     def remove_temporary_files(self):
-        print("REMOVING TEMPORARY FILES")
         RegisteredTempFile.remove_origin(self)
 
     def closedb(self):
@@ -452,7 +479,6 @@ class BioBlast(TmpBlast):
         return super().makedb(**kwargs)
 
     def closedb(self):
-        print("closing db")
         super().closedb()
         self.query_path = None
 
@@ -594,9 +620,8 @@ class BioBlast(TmpBlast):
         transformed_records = seq_db.get_many(keys)
         return keys, transformed_records
 
-    def parse_result_to_span(
-        self, data, inclusive=True, input_index=1, output_index=None
-    ):
+    @staticmethod
+    def parse_result_to_span(data, inclusive=True, input_index=1, output_index=None):
 
         if output_index is None:
             output_index = input_index
