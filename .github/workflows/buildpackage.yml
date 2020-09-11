@@ -1,6 +1,7 @@
 name: Build package
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master, development ]
     paths:
@@ -11,6 +12,7 @@ on:
     paths:
       - '!.github/**/*'
       - '.github/workflows/buildpackage.yml'
+
 jobs:
   build:
 
