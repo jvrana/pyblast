@@ -1,6 +1,3 @@
-# THIS PROJECT HAS BEEN ARCHIVED AND MOVED TO https://github.com/jvrana/pyblast2
-https://github.com/jvrana/pyblast2
-
 # pyblast
 
 This is a wrapper for other applications to run blast searches on SeqRecord objects and JSON objects. Intended to
