@@ -7,29 +7,31 @@ from pyblast.blast import BlastBase
 from pyblast.blast import TmpBlast
 
 
-def pytest_namespace(here):
-    return {
-        "b": BlastBase(
-            "db",
-            os.path.join(here, "data/test_data/db.fsa"),
-            os.path.join(here, "data/test_data/query.fsa"),
-            os.path.join(here, "data/blast_results"),
-            os.path.join(here, "data/blast_results/results.out"),
-        )
-    }
+# def pytest_namespace(here):
+#     return {
+#         "b": BlastBase(
+#             "db",
+#             os.path.join(here, "data/test_data/db.fsa"),
+#             os.path.join(here, "data/test_data/query.fsa"),
+#             os.path.join(here, "data/blast_results"),
+#             os.path.join(here, "data/blast_results/results.out"),
+#         )
+#     }
 
 
 @pytest.fixture(scope="function")
-def b(here):
+def b(here, tmpdir):
     d = os.path.join(here, "data/blast_results")
+    out_dir = tmpdir.join('out').mkdir()
+    results_out = tmpdir.join('out').join('results.out')
     if not os.path.isdir(d):
         os.mkdir(d)
     return BlastBase(
-        "db",
-        os.path.join(here, "data/test_data/db.fsa"),
-        os.path.join(here, "data/test_data/query.fsa"),
-        os.path.join(here, "data/blast_results"),
-        os.path.join(here, "data/blast_results/results.out"),
+        db_name="db",
+        subject_path=os.path.join(here, "data/test_data/db.fsa"),
+        query_path=os.path.join(here, "data/test_data/query.fsa"),
+        db_output_directory=out_dir,
+        results_out_path=results_out,
     )
 
 
