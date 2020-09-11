@@ -1,7 +1,16 @@
 name: Build package
 
-on: ["push", "pull_request"]
-
+on:
+  push:
+    branches: [ master, development ]
+    paths:
+      - '!.github/**/*'
+      - '.github/workflows/buildpackage.yml'
+  pull_request:
+    branches:  [ master, development ]
+    paths:
+      - '!.github/**/*'
+      - '.github/workflows/buildpackage.yml'
 jobs:
   build:
 
@@ -40,4 +49,4 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        poetry run pytest tests
+        poetry run pytest tests -x
