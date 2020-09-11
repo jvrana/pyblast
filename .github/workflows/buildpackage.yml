@@ -1,7 +1,16 @@
 name: Build package
 
-on: ["push", "pull_request"]
-
+on:
+  push:
+    branches: [ master, development ]
+    paths:
+      - '!.github/**/*'
+      - '.github/workflows/buildpackage.yml'
+  pull_request:
+    branches:  [ master, development ]
+    paths:
+      - '!.github/**/*'
+      - '.github/workflows/buildpackage.yml'
 jobs:
   build:
 
